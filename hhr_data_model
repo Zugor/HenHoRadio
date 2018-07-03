@@ -1,0 +1,283 @@
+
+CREATE KEYSPACE hhr
+  WITH REPLICATION = { 
+   'class' : 'SimpleStrategy', 
+   'replication_factor' : 1 
+  };
+//Q1: Tìm thông tin đăng nhập theo số điện thoại cụ thể
+
+CREATE TABLE hhr.user_by_phone_enable(
+    phone text, //unicode
+    enabled boolean, //2bit
+    user_id uuid,//128bit
+    password text, 
+    password_hash_algorithm text,
+    password_salt text,
+    PRIMARY KEY ((phone),enabled)
+)
+//Q1.1: Tim so dien thoai co ton tai hay khong
+CREATE TABLE hhr.user_by_phone(
+    phone text, //unicode
+    PRIMARY KEY ((phone))
+)
+
+//Q2: Tìm thông tin cá nhân theo userid cụ thể
+CREATE TABLE hhr.users(
+    user_id             uuid,
+    preview_thumbnail   uuid,
+    dob_day     int,
+    dob_month   int,
+    dob_year    int,
+    gender      int,
+    static_id   int,
+    fullname            text,
+    avg_ratings         float,
+    is_active           boolean,
+    mobile_active       boolean,
+    enabled             boolean,
+    phone               text,
+    address             text,
+    PRIMARY KEY ((user_id))
+)
+//Q2.1 tim thong tin xac thuc theo user_id
+CREATE TABLE hhr.user_by_certificate(
+    user_id             uuid,
+    id_card_f           blob,
+    id_card_b           blob,
+    personal_photo1     blob,
+    PRIMARY KEY ((user_id))
+)
+//Q2.2 tim thong tin chi tiet theo user_id
+CREATE TABLE hhr.user_by_details(
+    user_id             uuid,
+    home_town_return    int,
+    
+    distance            float,
+    height              text,
+    trust               float,
+    review_point        float,
+    
+    country             text,
+    description         text,
+    desc_wish           text,
+    body_type           text,
+    
+    comment             text,
+    majors              text,
+    asset_overview      text,
+    home_town           text,
+    address             text,
+    phones              map<text,text>,
+    emails              map<text,text>,
+    facebook            map<text,text>,
+    
+    hhr_goal            map<text,text>,
+    relationship_status map<text,text>,
+    general_personality set<frozen <map<text,text>>>,
+    glasses             map<text,text>,
+    
+    tattoo              map<text,text>,
+    plastic_surgery     map<text,text>,
+    clothing            map<text,text>,
+    best_part           map<text,text>,
+    
+    smoking             map<text,text>,
+    sport               map<text,text>,
+    travel              map<text,text>,
+    jealousy            map<text,text>,
+    
+    jobs                map<text,text>,
+    graduation          map<text,text>,
+    house               map<text,text>,
+    cars                map<text,text>,
+    
+    monthly_income      text,
+    religion            map<text,text>,
+    live_with           map<text,text>,
+    friends             map<text,text>,
+    appearance          map<text,text>,
+    pets                map<text,text>,
+    intro1              set<text>,
+    intro2              set<text>,
+    intro3              set<text>,
+    
+    video               set<text>,
+    
+    PRIMARY KEY ((user_id))
+)
+//Q3: Tìm tất cả các thành viên theo đã active  và sắp xếp theo thứ tự mới nhất
+CREATE TABLE hhr.user_by_active( 
+    user_id             uuid,
+    enabled             boolean,
+    is_active           boolean,
+    mobile_active       boolean,
+    liked               boolean,
+    id_like             uuid,
+    create_date         timestamp,
+    preview_thumbnail   uuid,
+    fullname            text,
+    description         text,
+    avg_ratings         int,
+    dob_year            int,
+    gender              int,
+    image_count         int,
+    address             text,
+    PRIMARY KEY ((user_id))
+)
+
+//Q4: Tìm tất cả các thành viên đã like theo userid va like_user_id 
+CREATE TABLE hhr.like_by_user(
+    user_id             uuid,
+    like_user_id        uuid,
+    id                  uuid,
+    PRIMARY KEY ((user_id),like_user_id)
+)
+//Q4.1 Tim tat ca cac thanh vien da like theo user_id va (sap xem theo thu tu moi nhat)
+CREATE TABLE hhr.likes(
+    id                  uuid,
+    user_id             uuid,
+    like_user_id        uuid,
+    address             text,
+    image_count         int,
+    release_timestamp   timestamp,
+    preview_thumbnail   text,
+    fullname            text,
+    dob_year            int,
+    gender              int,
+    description         text,
+    PRIMARY KEY ((id,user_id))
+)
+
+//Q5: Tìm tất cả các thành viên đã theo dõi theo enable=true,moblie_active=true và userid 
+CREATE TABLE hhr.follow_by_user(
+    user_id             uuid,
+    follow_user_id      uuid,
+    release_timestamp   timestamp,
+    preview_thumbnail   text,
+    fullname            text,
+    dob_year            int,
+    gender              int,
+    description         text,
+    PRIMARY KEY ((user_id,follow_user_id))
+)
+
+//Q6: Tìm tất cả các thành viên kết bạn enable=true,mobile_active=true và userid
+CREATE TABLE hhr.friends_by_user(
+    user_id             uuid,
+    friend_user_id      uuid,
+    release_timestamp   timestamp,
+    preview_thumbnail   text,
+    fullname            text,
+    dob_year            int,
+    gender              int,
+    description         text,
+    PRIMARY KEY ((user_id,friend_user_id))
+)
+
+//Q7: Tìm tất cả hình ảnh được upload bởi userid (sắp xếp theo thứ tự mới nhất)
+CREATE TABLE hhr.image_by_user(
+    user_id             uuid,
+    uploaded_timestamp  timestamp,
+    album_id            uuid,
+    image_id            uuid,
+    face_active         boolean,
+    publish             boolean,
+    PRIMARY KEY ((user_id),image_id)
+)
+//Q7.1
+CREATE TABLE hhr.image_by_user_del(
+    user_id             uuid,
+    uploaded_timestamp  timestamp,
+    delete_timestamp  timestamp,
+    
+    album_id            uuid,
+    image_id            uuid,
+    face_active         boolean,
+    publish             boolean,
+    PRIMARY KEY ((user_id),image_id)
+)
+//Q8: Tìm tất cả hình ảnh được upload với userid và trong album cụ thể (sắp xếp theo thứ tự mới nhất)
+CREATE TABLE hhr.image_by_user_album(
+    user_id             uuid,
+    album_id            uuid,
+    image_id            uuid,
+    uploaded_timestamp  timestamp,
+    description         text,
+    PRIMARY KEY ((user_id,album_id),image_id)
+)
+
+//Q9: Tìm tất cả các album theo userid sắp xếp theo tiêu đề theo alpha
+CREATE TABLE hhr.albums_by_user(
+    user_id         uuid,
+    album_id        uuid,
+    title           uuid,
+    created_time    timestamp,
+    description     text,
+    PRIMARY KEY ((user_id),album_id)
+);
+
+//Q10: Tìm tất cả các comment theo userid và sắp xếp theo trình tự mới nhất
+CREATE TABLE hhr.comments_by_user(
+    user_id             uuid,
+    comment_user_id     uuid,
+    posted_timestamp    timestamp,
+    comment             text,
+    fullname            text,
+    preview_thumbnail   text,
+    dob_year            int,
+    gender              int,
+    description         text,
+    PRIMARY KEY ((user_id),comment_user_id)
+)
+
+//Q11: Tìm tất cả các notification theo userid và (sắp xếp theo trình tự mới nhất)
+CREATE TABLE hhr.notifications_by_user_read(
+    user_id             uuid,
+    readed              boolean,
+    posted_timestamp    timestamp,
+    notification_id     text,
+    title               text,
+    type_navigation     text,
+    description         text,
+    PRIMARY KEY ((user_id,readed),notification_id)
+)
+
+//Q12: Tìm tất cả các thành viên theo giới tính,  độ tuổi, khu vực và (sắp xếp theo trình tự mới nhất)
+CREATE TABLE hhr.user_by_gender_state_year(
+    gender              int,
+    state               int,
+    dob_year            int,
+    created_date        timestamp,
+    user_id             uuid,
+    preview_thumbnail   text,
+    fullname            text,
+    description         text,
+    PRIMARY KEY ((gender,state),user_id,dob_year)
+)
+
+CREATE TABLE hhr.notifications(
+    notification_id uuid,
+    readed boolean,
+    posted_timestamp timestamp,
+    title text,
+    type text,
+    description text,
+    PRIMARY KEY ((notification_id),posted_timestamp,readed)
+)WITH CLUSTERING ORDER BY (posted_timestamp DESC);
+
+CREATE TABLE hhr.images(
+    image_id uuid,
+    image blob,
+    options map<text,text>,
+    description text,
+    face_active boolean,
+    PRIMARY KEY ((image_id))
+);
+CREATE TABLE hhr.ratings_by_user(
+    user_id uuid,
+    num_rating counter,
+    sum_rating counter,
+    PRIMARY KEY ((user_id))
+);
+
+
