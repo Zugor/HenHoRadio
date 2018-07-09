@@ -26,3 +26,6 @@ export * from "./photo.upload.form.section";
 export * from "./banner.section";
 export * from "./banner.section.v1"; 
 export * from "./404";
+export * from "./smartonboarding";
+export * from "./smartonboarding.step1";
+export * from "./smartonboarding.step2";

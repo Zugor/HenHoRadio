@@ -3,7 +3,7 @@ import { Link, Redirect,Router,Route, Switch } from "react-router-dom";
 import { history } from "../store";
 import { connect } from "react-redux";
 import { userActions } from "../actions";
-import { Header, HeaderVisible } from "../sections";
+import { Header, HeaderVisible, SmartOnBoarding } from "../sections";
 import { ViewInfo, IndexDetails } from "./index";
 class ProfileDetailPage extends React.Component{
     constructor(props){
@@ -47,6 +47,7 @@ class ProfileDetailPage extends React.Component{
             <div>
                     <Header />
                     <HeaderVisible />
+                    <SmartOnBoarding/>
                     <div className="tw3-content jsProfile">
                         <div className="tw3-container pos--rel">
                             <div className="tw3-row">

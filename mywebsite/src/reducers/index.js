@@ -15,6 +15,8 @@ import { userUpdate } from "./user.update.reducer";
 import { user} from "./user.reducer";
 import { imageMember } from "./image.member.reducer";
 import { memberDetail } from "./member.reducer";
+import { question } from "./question.reducer";
+
 const rootReducer=combineReducers({
     authentication,
     registration,
@@ -31,6 +33,7 @@ const rootReducer=combineReducers({
     userUpdate,
     user,
     imageMember,
-    memberDetail
+    memberDetail,
+    question
 });
 export default rootReducer;

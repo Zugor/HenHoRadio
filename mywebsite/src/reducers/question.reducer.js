@@ -1,25 +1,52 @@
-import questionConstants from "../constants";
+import { questionConstants } from "../constants";
 
 export function question(state={},action){
     
     switch(action.type){
-        case 'QUESTIONS_REQUEST':
-            return{
-                
+        case questionConstants.GET_QUESTION_REQUEST:
+            return {
+                loading: true
             }
-        case 'QUESTIONS_SUCCESS':
-            //console.log(state);
-            console.log(action);
-            
+        case questionConstants.SKIP_QUESTION_REQUEST:
             return {
-               question: action.question
-            };
-        case 'QUESTIONS_FAILURE':
-            //console.log(state);
-            
+                loading: true
+            }
+        case questionConstants.ANSWER_QUESTION_REQUEST:
             return {
-                
-         };
+                loading: true
+            }
+
+        case questionConstants.GET_QUESTION_SUCCESS:
+            //console.log(state);
+            return {
+                data: action.question
+            }
+        case questionConstants.SKIP_QUESTION_SUCCESS:
+            //console.log(state);
+            return {
+                data: action.question
+            }
+        case questionConstants.ANSWER_QUESTION_SUCCESS:
+            return {
+                data: action.question
+            }
+
+        case questionConstants.GET_QUESTION_FAILURE:
+            //console.log(state);
+            return {
+                error: action.error
+            }
+        case questionConstants.SKIP_QUESTION_FAILURE:
+            //console.log(state);
+            return {
+                error: action.error
+            }
+        case questionConstants.ANSWER_QUESTION_FAILURE:
+            //console.log(state);
+            return {
+                error: action.error
+            }
+
         default:
             return state;
     }

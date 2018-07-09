@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { IndexVerifiCation,EditDescription,ViewImages, ViewIndexDetail, EditDetail, ViewImagesMore } from "./index";
+import { IndexVerifiCation,EditDescription,ViewImages, ViewIndexDetail, EditDetail, ViewImagesMore, QuestionCatalog } from "./index";
 class IndexDetails extends React.Component{
     constructor(props){
         super(props);
@@ -18,6 +18,7 @@ class IndexDetails extends React.Component{
                         
                         <EditDescription />
                         <ViewImages />
+                        <QuestionCatalog/>
                         <hr className="tw3-hr" />
                         <ViewIndexDetail />
                         <hr className="tw3-hr" />

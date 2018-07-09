@@ -580,22 +580,46 @@ router.get("/question/add/:question",function(req,res,next){
             else (msg.length > 0)?
                 res.json({ status: false, message: msg, form: PARAM_IS_VALID})
             :
-                res.json({ status: true, question: question});
+                res.json({ status: true, result: question});
         });
     })
 });
-router.get("/question/get",function(req,res,next){
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+router.post("/question/get",function(req,res,next){
+    let params=req.body;
+    var uuid="";
+    var PARAMS_IS_VALID={};
     var results=[];
+    var query={};
     async.series([
         function(callback){
-            models.instance.questions.find({},function(err,questions){
-
-                results=(questions && questions.length > 0) ? questions : [];
+            models.instance.questions.find({},{select:['question_id','question']},function(err,questions){
+                results=(questions && questions.length > 0) ? questions[randomInt(0,11)] : null;
                 callback(err,null);
             })
         },
         function(callback){
-            callback(null,null);
+            try{
+                uuid=models.uuidFromString(params.id);
+                PARAMS_IS_VALID["uuid"]=uuid;
+                query={
+                    user_id: uuid,
+                }
+                callback(null,null)
+            }catch(e){
+                callback(e);
+            }
+        },
+        function(callback){
+            results['countAnsweredQuestionsForQABox'] = 0;
+            
+            models.instance.answer_by_user.find(query,{select:['user_id']},function(err, answers){
+                if(answers) results.countAnsweredQuestionsForQABox = answers.length;
+                callback(err,null);
+            })
         },
         function(callback){
             callback(null,null);
@@ -603,14 +627,67 @@ router.get("/question/get",function(req,res,next){
     ],function(err,result){
 
         if (err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
-        else res.json({ status: true , questions: results });
+        else res.json({ status: true , randomYesNoQuestion: results });
     })
 });
-router.post("/user/question/answer",function(req,res,next){
-    let params          =req.params;
-    let PARAMS_IS_VALID ={};
-    let query           ={};
-    let results         =[];
+router.post("/question/answer",function(req,res,next){
+    let answer_id=Uuid.random();
+    let params=req.body;
+    var PARAMS_IS_VALID={};
+    var results=[];
+    var queries=[];
+    var query={};
+
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID["user_id"]     = (params.user_id) ? models.uuidFromString(params.user_id) : null;
+            PARAMS_IS_VALID["question_id"]     = (params.question_id) ? models.uuidFromString(params.question_id) : null;
+            PARAMS_IS_VALID["answer"] = (params.answer) ? String(params.answer) : "0" ;
+            query={
+                'answer_id' : answer_id,
+                'user_id'    : PARAMS_IS_VALID.user_id,
+                'question_id'     : PARAMS_IS_VALID.question_id,
+                'answer'      : PARAMS_IS_VALID.answer,
+                'time_create' : new Date().getTime()
+            }
+            callback(null,null);
+        },
+        function(callback){
+            const answer=()=>{
+                let object      =query;
+                let instance    =new models.instance.answer_by_user(object);
+                let save        =instance.save({return_query: true});
+                return save;
+            }
+            queries.push(answer());
+            models.doBatch(queries,function(err){
+                callback(err,null);
+            });
+            // Batch Query
+        },
+        function(callback){
+            models.instance.questions.find({},{select:['question_id','question']},function(err,questions){
+                results=(questions && questions.length > 0) ? questions[randomInt(0,11)] : null;
+                callback(err,null);
+            })
+        },
+        function(callback){
+            results['countAnsweredQuestionsForQABox'] = 0;
+            query={
+                user_id: PARAMS_IS_VALID.user_id,
+            }
+            models.instance.answer_by_user.find(query,{select:['user_id']},function(err, answers){
+                if(answers) results.countAnsweredQuestionsForQABox = answers.length;
+                callback(err,null);
+            })
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({ status: true , randomYesNoQuestion: results });
+    })
 });
 
 router.put("/api/update/detail",function(req,res,next){

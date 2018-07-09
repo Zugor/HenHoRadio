@@ -2,7 +2,7 @@ import React from "react";
 import { Link, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import LoadingBar from 'react-redux-loading-bar';
-import { Header, HeaderVisible } from "../sections";
+import { Header, HeaderVisible, SmartOnBoarding } from "../sections";
 import { userActions } from "../actions";
 import { ViewImages,QuestionCatalog,ViewProfile,ViewProfileDetail  } from "./index";
 import { PageNotFound } from "../sections";
@@ -49,6 +49,7 @@ class ProfilePage extends React.Component{
 
                 <Header />
                 <HeaderVisible />
+
                 <div className="tw3-wrapper">
                 <div className="tw3-content jsProfile">
                     <div className="tw3-container pos--rel">

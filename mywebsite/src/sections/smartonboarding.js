@@ -1,65 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
-import {AddImages} from "../ProfileDetails"
-import { userActions, modalAction } from "../actions";
-
-
-class SmartOnBoarding_step1 extends React.Component{
-    constructor(props){
-        super(props);
-        this.handleAddPreviewThumbnail=this.handleAddPreviewThumbnail.bind(this);
-    }
-    handleAddPreviewThumbnail(){
-        const { dispatch } = this.props;
-        dispatch(modalAction.openModal({ customClass: 'tw3-modal--small  tw3-modal--photoUploadv4 ',content:<AddImages type="previewThumbnail" />}));
-    }
-    render(){
-        const {users} = this.props;
-        return(
-            <div id="smart-onboarding-1" className="tw3-smartOnboarding__step tw3-smartOnboarding--step1">
-                <div className="tw3-mediav2 tw3-mediav2--auto">
-                    <div className="tw3-mediav2__figure">
-                        <img src="https://twoo-a.akamaihd.net/static/757517345581938776/images/v3/onboarding/img-picture.png" width="56" height="56" className="mh--default"/>
-                    </div>
-                    <div className="tw3-mediav2__body text--white tw3-h5 text--bold">
-                    {users}, chào mừng bạn vào HenHoRadio! Tải một hình đại diện lên để bắt đầu sử dụng HenHoRadio.
-                    </div>
-                    <div className="tw3-mediav2__actions">
-                        <a href="javascript://" className="tw3-button tw3-button--white tw3-button--rounded jsUploaderTrigger" data-type="PROFILE" onClick={this.handleAddPreviewThumbnail}>Thêm hình</a>
-                    </div>
-                </div>
-            </div>
-        )
-    }
-}
-
-class SmartOnBoarding_step2 extends React.Component{
-    render(){
-        return(
-        <div id="smart-onboarding-2" className="tw3-smartOnboarding__step tw3-smartOnboarding--step2">
-            <div className="tw3-mediav2 tw3-mediav2--auto">
-                <div className="tw3-mediav2__figure">
-                    <span className="tw3-smartOnboarding__step__qaCounter"><span className="jsAnsweredQuestions">2/10</span></span>
-                    <img src="https://twoo-a.akamaihd.net/static/71545153354471295584464/images/v3/onboarding/img-question.png" width="56" height="56" className="mh--default"/>
-                </div>
-                <div className="tw3-mediav2__body text--white tw3-h5 text--bold">
-                    <p className="tw3-h5 m0">Câu hỏi <span className="jsAnsweredQuestions">2/10</span></p>
-                    <p className="tw3-h4 text--white jsQuestion">'Thời trang' và 'hông' có phải là sự lăng mạ đối với bạn?</p>
-                </div>
-                <div className="tw3-mediav2__actions">
-                    <p>
-                        <a className="tw3-button tw3-button--white tw3-button--subtle tw3-button--large tw3-button--rounded jsAnswerQuestion mr--compact" data-question-id="1846" data-answer="1" data-trigger="smartonboarding">có</a>
-                        <a className="tw3-button tw3-button--white tw3-button--subtle tw3-button--large tw3-button--rounded jsAnswerQuestion" data-question-id="1846" data-answer="2" data-trigger="smartonboarding">không</a>
-                    </p>
-                    <p className="m0">
-                        <a className="text--white jsSkipQuestion text--line" data-question-id="1846" data-answer="" data-trigger="smartonboarding">bỏ qua</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-        )
-    }
-}
+import { SmartOnBoarding_Step1 } from "./smartonboarding.step1";
+import { SmartOnBoarding_Step2 } from "./smartonboarding.step2";
 
 class SmartOnBoarding_step3 extends React.Component{
     render(){
@@ -134,14 +76,12 @@ class SmartOnBoarding extends React.Component{
       .join(' ');
     }
     render(){
-        const {users, dispatch} = this.props;
+        const {users} = this.props;
         var self = this;
         var _users=(users.item && users.item.status && users.item.user.length > 0) ? users.item.user[0] : {};
         var _data={
-            fullname            : _users.fullname,
+            id                  : _users.id,
             preview_thumbnail   : _users.preview_thumbnail,
-            age                 : (_users.dob_year) ? (new Date().getFullYear() - _users.dob_year) : '0',
-            address             : _users.address
         }
         if(!_data.preview_thumbnail){ 
             self.state.step[0].done = 1;
@@ -157,23 +97,23 @@ class SmartOnBoarding extends React.Component{
                           self.state.step.map(function(data, index) {
                             var liClassesNumber = self.classNames({
                               'tw3-steps__step__number': true,
-                              'tw3-steps__step__number--done': self.state.step[index].done,
-                              'tw3-steps__step__number--active': self.state.step[index].active
+                              'tw3-steps__step__number--done': data.done,
+                              'tw3-steps__step__number--active': data.active
                             });
                             return (
-                                <li className="tw3-steps__step tw3-col-3"><div className={liClassesNumber}><img src="https://twoo-a.akamaihd.net/static/864505989717655270395861131/shared/i/blank.gif" width="25" height="25" className="vat"/></div></li>
+                                <li key={index} className="tw3-steps__step tw3-col-3"><div className={liClassesNumber}><img src="https://twoo-a.akamaihd.net/static/864505989717655270395861131/shared/i/blank.gif" width="25" height="25" className="vat"/></div></li>
                             )
                           })
                         }
                         </ul>
                         {
                             !self.state.step[0].done ? 
-                                <SmartOnBoarding_step1 users={_data.fullname} dispatch={dispatch}/>
+                                <SmartOnBoarding_Step1/>
                             : ''
                         }
                         {
                             self.state.step[0].done ?
-                                <SmartOnBoarding_step2/>
+                                <SmartOnBoarding_Step2/>
                             : ''
                         }
                         {

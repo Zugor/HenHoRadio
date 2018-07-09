@@ -51,7 +51,7 @@ class EditDescription extends React.Component{
         const {userUpdate , userDetails} = this.props;
         var userd=(userUpdate.user && userUpdate.user.status && userUpdate.user.result && userUpdate.user.result.value) ? userUpdate.user.result.value : ''; 
         var useru=(userDetails.user && userDetails.user.status && userDetails.user.result.length > 0 ) ? userDetails.user.result[0].description : ''; 
-        var des=useru;
+        var des=useru ? useru : '';
         //console.log(this.state);
         //console.log(des);
         return(
