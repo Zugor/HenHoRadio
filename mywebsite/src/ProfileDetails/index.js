@@ -17,6 +17,6 @@ export * from "./ImageDetailShow";
 export * from "./AddImages";
 export * from "./IndexVerifiCation";
 export * from "./QuestionCatalog";
-
-
+export * from "./EditQuestion";
+export * from "./MatchYoursUpdate";
 

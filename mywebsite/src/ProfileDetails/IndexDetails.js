@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { IndexVerifiCation,EditDescription,ViewImages, ViewIndexDetail, EditDetail, ViewImagesMore, QuestionCatalog } from "./index";
+import { IndexVerifiCation,EditDescription,ViewImages, ViewIndexDetail, EditDetail, EditQuestion, ViewImagesMore, QuestionCatalog } from "./index";
 class IndexDetails extends React.Component{
     constructor(props){
         super(props);
@@ -28,11 +28,15 @@ class IndexDetails extends React.Component{
                 { switchView=='media' &&
                    <ViewImagesMore /> 
                 }
-            
+
                 {   switchView=='edit' &&
                     <EditDetail />
                 }
-                    
+                
+                {   switchView=='question' &&
+                    <EditQuestion />
+                }
+
                     <div className="jsView"></div>
                     <div className="jsView jsProfileQuestions"></div>
                 </div>
