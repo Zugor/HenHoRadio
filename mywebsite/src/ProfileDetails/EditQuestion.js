@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import {pageActions,userActions} from "../actions";
-import {ImproveMatchYours} from "./index";
+import {ImproveMatchYours, QuestionsLoaderSection} from "./index";
 class EditQuestion extends React.Component{
     constructor(props){
         super(props);
@@ -20,23 +20,24 @@ class EditQuestion extends React.Component{
                 <a href="javascript://" className="jsSwitchView" onClick={this.handleSwitchView}><i className="tw3-iconArrowLeft tw3-iconMedium mr--compact el--vam"></i></a>
                 Câu hỏi
                 </div>
-                <div class="jsQuestionsTabSection">
-                    <div class="tw3-profile__body__box">
-                        <div class="tw3-row jsHighestMatchContainer">
-                            <h4 class="mb--loose text--center">Điểm phù hợp cao nhất của bạn là</h4>
-                            <div class="mb--default text--center">
-                                <div class="canvasHolder">
-                                    <canvas class="jsHighestPossibleMatch tw3-profile__highestPossibleMatchCanvas" dir="ltr" data-value="75" width="100" height="100"></canvas>
+                <div className="jsQuestionsTabSection">
+                    <div className="tw3-profile__body__box">
+                        <div className="tw3-row jsHighestMatchContainer">
+                            <h4 className="mb--loose text--center">Điểm phù hợp cao nhất của bạn là</h4>
+                            <div className="mb--default text--center">
+                                <div className="canvasHolder">
+                                    <canvas className="jsHighestPossibleMatch tw3-profile__highestPossibleMatchCanvas" dir="ltr" data-value="75" width="100" height="100"></canvas>
                                 </div>
                             </div>
-                            <div class="tw3-col-12 text--center">
-                                <p class="text--smaller mb--default jsQuestionsLeftDiscover">Trả lời <strong><span>96</span> câu hỏi nữa</strong> để có cơ hội khám phá những người phù hợp nhất với bạn</p>
+                            <div className="tw3-col-12 text--center">
+                                <p className="text--smaller mb--default jsQuestionsLeftDiscover">Trả lời <strong><span>96</span> câu hỏi nữa</strong> để có cơ hội khám phá những người phù hợp nhất với bạn</p>
                             </div>
                         </div>
                     </div>
                     <hr className="tw3-hr mb--default" />
                     <ImproveMatchYours/>
                     <hr className="tw3-hr mb--default" />
+                    <QuestionsLoaderSection/>
                 </div>
             </div>
         )
