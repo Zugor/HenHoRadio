@@ -534,31 +534,24 @@ router.get("/user/profile/:id",function(req,res,next){
     });
 });
 
-router.get("/question/add/:question",function(req,res,next){
+router.get("/question/add/:category/:question",function(req,res,next){
     let question_id=Uuid.random();
-    var results=[];
     var {params}=req;
-    console.log(params);
-    
+    //console.log(params);
+    var question_object;
     var PARAM_IS_VALID={};
     var queries=[];msg=[];
     async.series([
         function(callback){
-            question={
-                question_id: question_id,
-                question: params.question,
+            question_object={
+                question_id     : question_id,
+                question        : params.question+'?',
+                category        : params.category,
             }
-            PARAM_IS_VALID["question"]=params.question;
-            //PARAM_IS_VALID['state']         = (params.state) ?  Number(params.state.value) : '';
             
             callback(null,null);
         },
         function(callback){
-            var question_object={
-                question_id     : question_id,
-                question    : PARAM_IS_VALID.question,
-                answer      : '',
-            }
             const questions=()=>{
                 let object      =question_object;
                 let instance    =new models.instance.questions(object);
@@ -575,12 +568,12 @@ router.get("/question/add/:question",function(req,res,next){
        // console.log(queries);
         models.doBatch(queries,function(err){
             if (err) throw err;
-            console.log(queries);
+            //console.log(queries);
             if(err) res.json({status: false});
             else (msg.length > 0)?
                 res.json({ status: false, message: msg, form: PARAM_IS_VALID})
             :
-                res.json({ status: true, result: question});
+                res.json({ status: true, result: question_object});
         });
     })
 });
@@ -597,7 +590,7 @@ router.post("/question/get",function(req,res,next){
     async.series([
         function(callback){
             models.instance.questions.find({},{select:['question_id','question']},function(err,questions){
-                results=(questions && questions.length > 0) ? questions[randomInt(0,11)] : null;
+                results=(questions && questions.length > 0) ? questions[randomInt(0,3)] : null;
                 callback(err,null);
             })
         },
@@ -634,7 +627,7 @@ router.post("/question/answer",function(req,res,next){
     let answer_id=Uuid.random();
     let params=req.body;
     var PARAMS_IS_VALID={};
-    var results=[];
+    var results={};
     var queries=[];
     var query={};
 
@@ -642,13 +635,15 @@ router.post("/question/answer",function(req,res,next){
         function(callback){
             PARAMS_IS_VALID["user_id"]     = (params.user_id) ? models.uuidFromString(params.user_id) : null;
             PARAMS_IS_VALID["question_id"]     = (params.question_id) ? models.uuidFromString(params.question_id) : null;
-            PARAMS_IS_VALID["answer"] = (params.answer) ? String(params.answer) : "0" ;
+            PARAMS_IS_VALID["answer"] = (params.answer) ? Number(params.answer) : 0 ;
+            let answer_accepted = [0,0];
+            answer_accepted[PARAMS_IS_VALID.answer] = 1;
             query={
                 'answer_id' : answer_id,
                 'user_id'    : PARAMS_IS_VALID.user_id,
                 'question_id'     : PARAMS_IS_VALID.question_id,
                 'answer'      : PARAMS_IS_VALID.answer,
-                'time_create' : new Date().getTime()
+                'answer_accepted' : answer_accepted
             }
             callback(null,null);
         },
@@ -667,7 +662,7 @@ router.post("/question/answer",function(req,res,next){
         },
         function(callback){
             models.instance.questions.find({},{select:['question_id','question']},function(err,questions){
-                results=(questions && questions.length > 0) ? questions[randomInt(0,11)] : null;
+                results=(questions && questions.length > 0) ? questions[randomInt(0,3)] : null;
                 callback(err,null);
             })
         },

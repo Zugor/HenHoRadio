@@ -5,12 +5,17 @@ import { questionActions } from "../actions";
 class SmartOnBoarding_Step2 extends React.Component{
     constructor(props){
         super(props);
+        this.state={
+            question_number: 0,
+        }
         this.handleSkipQuestion=this.handleSkipQuestion.bind(this);
     }
     handleSkipQuestion(){
-        const { authentication } = this.props;
+        const { authentication, question } = this.props;
         var user_id=authentication.loggedIn ? authentication.user.user_id : '';
         this.props.dispatch(questionActions.skipQuestion(user_id));
+        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : this.state.question_number;
+        this.setState({question_number: question_num});   
     }
     handleAnswerQuestion(answer){
         const { dispatch, authentication, question } = this.props;
@@ -18,6 +23,8 @@ class SmartOnBoarding_Step2 extends React.Component{
         const user_id = authentication.loggedIn ? authentication.user.user_id : '';
         const question_id = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question_id : '' ;
         dispatch(questionActions.answerQuestion(answer, question_id, user_id));
+        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : this.state.question_number;
+        this.setState({question_number: question_num});   
     }
     componentDidMount(){
         const { authentication } = this.props;
@@ -27,7 +34,7 @@ class SmartOnBoarding_Step2 extends React.Component{
     render(){
         var {question} = this.props;
         
-        var question_num = (question.data && question.data.randomYesNoQuestion) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : 0;
+        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : this.state.question_number;
         var question_content = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question : '' ;
         var question_id = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question_id : '' ;
         return(
