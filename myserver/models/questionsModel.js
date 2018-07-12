@@ -3,7 +3,7 @@ module.exports={
         question_id         : "uuid",
         question            : "text",
         category            : "text",
-        answer              : {
+        answerlist              : {
             type: "list",
             typeDef: "<text>",
             default: ["có","không"]     

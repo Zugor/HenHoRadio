@@ -23,7 +23,14 @@ module.exports={
             type: "tinyint",
             default: 0
         },
-        question_id     : "uuid",
+        question_id         : "uuid",
+        question            : "text",
+        category            : "text",
+        answerlist              : {
+            type: "list",
+            typeDef: "<text>",
+            default: ["có","không"]     
+        },
     },
     key:[["user_id"], "answer_id"] ,
 }

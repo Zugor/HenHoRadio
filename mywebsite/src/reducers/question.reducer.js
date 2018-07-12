@@ -7,6 +7,10 @@ export function question(state={},action){
             return {
                 loading: true
             }
+        case questionConstants.GET_QUESTION_AND_ANSWER_REQUEST:
+            return {
+                loading: true
+            }
         case questionConstants.SKIP_QUESTION_REQUEST:
             return {
                 loading: true
@@ -17,6 +21,11 @@ export function question(state={},action){
             }
 
         case questionConstants.GET_QUESTION_SUCCESS:
+            //console.log(state);
+            return {
+                data: action.question
+            }
+        case questionConstants.GET_QUESTION_AND_ANSWER_SUCCESS:
             //console.log(state);
             return {
                 data: action.question
@@ -32,6 +41,11 @@ export function question(state={},action){
             }
 
         case questionConstants.GET_QUESTION_FAILURE:
+            //console.log(state);
+            return {
+                error: action.error
+            }
+        case questionConstants.GET_QUESTION_AND_ANSWER_FAILURE:
             //console.log(state);
             return {
                 error: action.error

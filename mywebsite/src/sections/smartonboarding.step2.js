@@ -7,6 +7,7 @@ class SmartOnBoarding_Step2 extends React.Component{
         super(props);
         this.state={
             question_number: 0,
+            question: null,
         }
         this.handleSkipQuestion=this.handleSkipQuestion.bind(this);
     }
@@ -14,8 +15,9 @@ class SmartOnBoarding_Step2 extends React.Component{
         const { authentication, question } = this.props;
         var user_id=authentication.loggedIn ? authentication.user.user_id : '';
         this.props.dispatch(questionActions.skipQuestion(user_id));
-        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : this.state.question_number;
-        this.setState({question_number: question_num});   
+        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.countAnsweredQuestionsForQABox : this.state.question_number;
+        var question_content = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question  : this.state.question;
+        this.setState({question_number: question_num, question: question_content}); 
     }
     handleAnswerQuestion(answer){
         const { dispatch, authentication, question } = this.props;
@@ -23,8 +25,9 @@ class SmartOnBoarding_Step2 extends React.Component{
         const user_id = authentication.loggedIn ? authentication.user.user_id : '';
         const question_id = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question_id : '' ;
         dispatch(questionActions.answerQuestion(answer, question_id, user_id));
-        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : this.state.question_number;
-        this.setState({question_number: question_num});   
+        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.countAnsweredQuestionsForQABox : this.state.question_number;
+        var question_content = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question  : this.state.question;
+        this.setState({question_number: question_num, question: question_content});   
     }
     componentDidMount(){
         const { authentication } = this.props;
@@ -34,8 +37,8 @@ class SmartOnBoarding_Step2 extends React.Component{
     render(){
         var {question} = this.props;
         
-        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.countAnsweredQuestionsForQABox : this.state.question_number;
-        var question_content = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question : '' ;
+        var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.countAnsweredQuestionsForQABox : this.state.question_number;
+        var question_content = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question  : this.state.question;
         var question_id = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question_id : '' ;
         return(
         <div id="smart-onboarding-2" className="tw3-smartOnboarding__step tw3-smartOnboarding--step2">
@@ -64,8 +67,8 @@ class SmartOnBoarding_Step2 extends React.Component{
 }
 
 function mapStateToProps(state){
-    const { authentication, users, question }=state;
-    return { authentication, users, question };
+    const { authentication, question }=state;
+    return { authentication, question };
 }
 const connectedSmartOnBoardingStep2=connect(mapStateToProps)(SmartOnBoarding_Step2);
 export { connectedSmartOnBoardingStep2 as SmartOnBoarding_Step2 }

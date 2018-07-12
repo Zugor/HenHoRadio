@@ -1,17 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
-import {pageActions,userActions} from "../actions";
-import {ImproveMatchYours, QuestionsLoaderSection} from "./index";
+import {pageActions} from "../actions";
+import {ImproveMatchYours, AnsweredQuestionsBox} from "./index";
 class EditQuestion extends React.Component{
     constructor(props){
         super(props);
         this.handleSwitchView=this.handleSwitchView.bind(this);
     }
     handleSwitchView(){
-        const {dispatch,authentication } = this.props;
+        const {dispatch } = this.props;
         dispatch(pageActions.switchView('details'));
-        dispatch(userActions.getMemberDetails(authentication.user.user_id));
-        
     }
     render(){
         return(
@@ -37,7 +35,7 @@ class EditQuestion extends React.Component{
                     <hr className="tw3-hr mb--default" />
                     <ImproveMatchYours/>
                     <hr className="tw3-hr mb--default" />
-                    <QuestionsLoaderSection/>
+                    <AnsweredQuestionsBox/>
                 </div>
             </div>
         )

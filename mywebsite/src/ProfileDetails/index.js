@@ -19,5 +19,6 @@ export * from "./IndexVerifiCation";
 export * from "./QuestionCatalog";
 export * from "./EditQuestion";
 export * from "./MatchYoursUpdate";
-export * from "./QuestionAndAnswer";
-export * from "./QuestionsSectionUpdate";
+export * from "./QaModal";
+export * from "./AnsweredQuestionsBox";
+export * from "./ViewQuestionItem";
