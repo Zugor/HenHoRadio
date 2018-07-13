@@ -1,12 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { modalActions } from "../actions";
+import { modalActions, questionActions } from "../actions";
 const QUESTIONTYPE=require('../data/question').questionType;
 
 class QaModal extends React.Component{
     constructor(props){
         super(props);
+        var {data} = this.props;
         this.state={
+            answer_id : (data && data.answer_id) ? data.answer_id : null,
             answer  : 0,
             acepted : 0,
             disabled  : 0,
@@ -14,10 +16,20 @@ class QaModal extends React.Component{
         }
         this.closeModal=this.closeModal.bind(this);
         this.setPrivate = this.setPrivate.bind(this);
+        this.deleteAnswer = this.deleteAnswer.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
     setPrivate() {
         this.setState({private : !this.state.private});
+    }
+    deleteAnswer() {
+        const { authentication, dispatch } = this.props;
+        var user_id=authentication.loggedIn ? authentication.user.user_id : '';
+        var answer_id = this.state.answer_id;
+        if(answer_id){
+            this.props.dispatch(questionActions.deleteAnsweredQuestion(answer_id, user_id));
+            dispatch(modalActions.closeModal());
+        }
     }
     handleSubmit(event) {
         event.preventDefault();
@@ -48,8 +60,8 @@ class QaModal extends React.Component{
         return(
 <div className="jsQaModalContent" data-questionid={_data.question_id}>
 <form onSubmit={this.handleSubmit}>
-    {_data.answer &&
-    <a className="tw3-box--qAndA__delete jsQuestionDelete right tw3-tooltip jsTooltip cp" data-feedback-success="Đã xóa và bỏ qua câu hỏi!" data-visible-on-mobile="false" href="/profile?action=deleteQuestion&amp;questionid=1929" data-text="Xóa và bỏ qua câu hỏi">
+    {'answer' in _data &&
+    <a className="tw3-box--qAndA__delete jsQuestionDelete right tw3-tooltip jsTooltip cp" href="javascript://" onClick={this.deleteAnswer} data-text="Xóa và bỏ qua câu hỏi">
         <i className="tw3-iconTrash tw3-iconMedium tw3-iconGrey right"></i>
     </a>
     }

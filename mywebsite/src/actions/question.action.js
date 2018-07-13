@@ -8,6 +8,8 @@ export const questionActions={
     getAnsweredQuestion,
     getQuestionImprove,
     skipQuestionImprove,
+    updateAnsweredQuestion,
+    deleteAnsweredQuestion,
 }
 function getQuestion(user_id){
     return dispatch=>{
@@ -86,4 +88,30 @@ function getAnsweredQuestion(user_id){
     function request(user_id){ return { type: questionConstants.ANSWERED_QUESTION_REQUEST, user_id}};
     function success(question){ return { type: questionConstants.ANSWERED_QUESTION_SUCCESS, question}};
     function failure(error){ return { type: questionConstants.ANSWERED_QUESTION_FAILURE, error}};
+}
+function updateAnsweredQuestion(answer_id, user_id, answer_object){
+    return dispatch=>{
+        dispatch(request(answer_id));
+        questionService.updateAnsweredQuestion(answer_id, user_id, answer_object)
+            .then(
+                question    => dispatch(success(question)),
+                error   => dispatch(failure(error))
+        )
+    }
+    function request(answer_id){ return { type: questionConstants.UPDATE_ANSWERED_QUESTION_REQUEST, answer_id}};
+    function success(question){ return { type: questionConstants.UPDATE_ANSWERED_QUESTION_SUCCESS, question}};
+    function failure(error){ return { type: questionConstants.UPDATE_ANSWERED_QUESTION_FAILURE, error}};
+}
+function deleteAnsweredQuestion(answer_id, user_id){
+    return dispatch=>{
+        dispatch(request(answer_id));
+        questionService.deleteAnsweredQuestion(answer_id, user_id)
+            .then(
+                question    => dispatch(success(question)),
+                error   => dispatch(failure(error))
+        )
+    }
+    function request(answer_id){ return { type: questionConstants.DELETE_ANSWERED_QUESTION_REQUEST, answer_id}};
+    function success(question){ return { type: questionConstants.DELETE_ANSWERED_QUESTION_SUCCESS, question}};
+    function failure(error){ return { type: questionConstants.DELETE_ANSWERED_QUESTION_FAILURE, error}};
 }

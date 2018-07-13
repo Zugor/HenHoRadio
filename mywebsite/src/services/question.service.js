@@ -6,6 +6,8 @@ export const questionService= {
     getAnsweredQuestion,
     getQuestionImprove,
     skipQuestionImprove,
+    updateAnsweredQuestion,
+    deleteAnsweredQuestion,
 }
 const api={
     getQuestion             :"/question/get",
@@ -14,6 +16,8 @@ const api={
     skipQuestionImprove     :"/question/get",
     answerQuestion          :"/question/answer",
     getAnsweredQuestion     :"/question/answered/get",
+    updateAnsweredQuestion  :"/question/answered/update",
+    deleteAnsweredQuestion  :"/question/answered/delete",
 }
 
 function getQuestion(user_id){
@@ -63,6 +67,22 @@ function getAnsweredQuestion(user_id){
         body: JSON.stringify({id: user_id})
     }
     return fetch(api.getAnsweredQuestion,requestOptions).then(handleResponse);
+}
+function updateAnsweredQuestion(answer_id, user_id, answer_object){
+    const requestOptions={
+        method: 'POST',
+        headers: {...authHeader(), 'Content-Type': 'application/json'},
+        body: JSON.stringify({answer_id: answer_id, user_id: user_id,...answer_object})
+    }
+    return fetch(api.updateAnsweredQuestion,requestOptions).then(handleResponse);
+}
+function deleteAnsweredQuestion(answer_id, user_id){
+    const requestOptions={
+        method: 'POST',
+        headers: {...authHeader(), 'Content-Type': 'application/json'},
+        body: JSON.stringify({answer_id: answer_id, user_id: user_id})
+    }
+    return fetch(api.deleteAnsweredQuestion,requestOptions).then(handleResponse);
 }
 
 function handleResponse(response){

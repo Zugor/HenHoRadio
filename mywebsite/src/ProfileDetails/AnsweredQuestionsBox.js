@@ -9,10 +9,8 @@ class AnsweredQuestionsBox extends React.Component{
     }
     componentDidMount(){
         const { authentication, dispatch } = this.props;
-        var { question } = this.props;
         var user_id=authentication.loggedIn ? authentication.user.user_id : '';
         dispatch(questionActions.getAnsweredQuestion(user_id));
-        const {answeredQuestion} = this.props;
     }
     render(){
         const {answeredQuestion} = this.props;

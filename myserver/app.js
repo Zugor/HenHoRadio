@@ -757,38 +757,93 @@ router.post("/question/answer",function(req,res,next){
         else res.json({ status: true , countAnsweredQuestionsForQABox: countAnswered,randomYesNoQuestion: results });
     })
 });
-router.post("/question/answer/update",function(req,res,next){
+router.post("/question/answered/update",function(req,res,next){
     let params=req.body;
     var PARAMS_IS_VALID={};
+    var results={};
+    var query={};
+    var countAnswered = 0;
     async.series([
         function(callback){
             PARAMS_IS_VALID["answer_id"]       = (params.answer_id) ? models.uuidFromString(params.answer_id) : null;
             PARAMS_IS_VALID["user_id"]         = (params.user_id) ? models.uuidFromString(params.user_id) : null;
-            PARAMS_IS_VALID["answer"]          = (params.answer) ? Number(params.answer) : 0 ;
-            PARAMS_IS_VALID["answer_accepted"] = (params.answer_accepted) ? params.answer_accepted : [0,0];
-
-            PARAMS_IS_VALID["answer_accepted"][PARAMS_IS_VALID.answer] = 1;
+            if(params.answer) PARAMS_IS_VALID["answer"]                = Number(params.answer);
+            if(params.answer_accepted) PARAMS_IS_VALID["answer_accepted"] = (params.answer_accepted) ? params.answer_accepted : [0,0];
+            if(params.answer_accepted) PARAMS_IS_VALID["answer_accepted"][PARAMS_IS_VALID.answer] = 1;
+            
             if(params.explanation) PARAMS_IS_VALID["explanation"]      = params.explanation;
             if(params.importance)  PARAMS_IS_VALID["importance"]       = params.importanc;
             if(params.private)     PARAMS_IS_VALID["private"]          = params.private;
+
             callback(null,null);
         },
         function(callback){
+            query={
+                user_id: PARAMS_IS_VALID.user_id,
+            }
             var query_object = {user_id: PARAMS_IS_VALID.user_id, answer_id: PARAMS_IS_VALID.answer_id};
-            var update_values_object = {[PARAMS_IS_VALID.field]:PARAMS_IS_VALID.value };
+            var update_values_object = PARAMS_IS_VALID;
             var options = {ttl: 86400, if_exists: false};
-            
-            models.instance.questions.update(query_object, update_values_object, options,function(err){
+            delete update_values_object.user_id;
+            delete update_values_object.answer_id;
+
+            models.instance.answer_by_user.update(query_object, update_values_object, options,function(err){
                 callback(err,null);
             })
         },
-        
+        function(callback){
+            models.instance.answer_by_user.find(query,function(err, answers){
+                if(answers) countAnswered = answers.length;
+                results = answers;
+                callback(err,null);
+            })
+        },
         function(callback){
             callback(null,null);
         }
     ],function(err,result){
-        if (err) res.json({status: false , message: MESSAGE.SYSTEM_BUSY});
-        else res.json({status: true, results: params});
+        if (err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({ status: true , countAnsweredQuestionsForQABox: countAnswered, answeredQuestions: results });
+    })
+});
+router.post("/question/answered/delete",function(req,res,next){
+    let params=req.body;
+    var PARAMS_IS_VALID={};
+    var results={};
+    var query={};
+    var countAnswered = 0;
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID["answer_id"]       = (params.answer_id) ? models.uuidFromString(params.answer_id) : null;
+            PARAMS_IS_VALID["user_id"]         = (params.user_id) ? models.uuidFromString(params.user_id) : null;
+
+            callback(null,null);
+        },
+        function(callback){
+            var query_object = {user_id: PARAMS_IS_VALID.user_id, answer_id: PARAMS_IS_VALID.answer_id};
+            var options = {ttl: 86400, if_exists: false};
+            models.instance.answer_by_user.delete(query_object, options,function(err){
+                console.log(err);
+                
+                callback(err,null);
+            })
+        },
+        function(callback){
+            query={
+                user_id: PARAMS_IS_VALID.user_id,
+            }
+            models.instance.answer_by_user.find(query,function(err, answers){
+                if(answers) countAnswered = answers.length;
+                results = answers;
+                callback(err,null);
+            })
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({ status: true , countAnsweredQuestionsForQABox: countAnswered, answeredQuestions: results });
     })
 });
 

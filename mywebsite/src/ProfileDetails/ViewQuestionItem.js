@@ -7,11 +7,29 @@ const QUESTIONTYPE=require('../data/question').questionType;
 class ViewQuestionItem extends React.Component{
     constructor(props){
         super(props);
+        const { data }  = this.props; 
+        this.state = {
+            answer_id   : data.answer_id,
+            value       : data.explanation,
+        };
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     handleOpenAnswer(data){
         const { dispatch } = this.props;
         dispatch(modalActions.openModal({ className: 'tw3-modal--qAndA  tw3-modal--medium  tw3-modal--padding--slack ',content:<QaModal data={data}/>}));
-   }
+    }
+    handleChange(event) {
+        this.setState({value: event.target.value});
+    }
+    handleSubmit(event) {
+        event.preventDefault();
+        const { authentication } = this.props;
+        var user_id=authentication.loggedIn ? authentication.user.user_id : '';
+        var answer_object = {explanation : this.state.value};
+        var answer_id = this.state.answer_id;
+        this.props.dispatch(questionActions.updateAnsweredQuestion(answer_id, user_id, answer_object));
+    }
     render(){
         const { data }  = this.props; 
         const _data ={
@@ -47,17 +65,27 @@ class ViewQuestionItem extends React.Component{
                         })
                     }
                 </ul>
-
-                <div className="tw3-qAndA__explanation">
-                    <div className="tw3-row">
-                        <div className="tw3-col-8">
-                            <textarea placeholder="Giải thích thêm..." className="tw3-textarea tw3-textarea--autogrow jsTextAreaAutoGrow jsQuestionExplanation" name="explanation" maxLength="250" defaultValue={_data.explanation}/>
-                        </div>
-                        <div className="tw3-col-4 text--right">
-                            <input type="submit" defaultValue="Gửi" className="tw3-qAndA__explanation__send tw3-qAndA__explanation__send--disabled jsQuestionExplanationSubmit mr--default"/>
-                        </div>
+                
+                { (_data.explanation) ? (
+                    <div>
+                        <h6 className="text--subtle text--upper">GIẢI THÍCH CỦA BẠN</h6>
+                        <p className="mb--default text--breakAll">{_data.explanation}</p>
                     </div>
-                </div>
+                ) : (
+                    <div className="tw3-qAndA__explanation">
+                        <form onSubmit={this.handleSubmit}>
+                            <div className="tw3-row">
+                                <div className="tw3-col-8">
+                                    <textarea placeholder="Giải thích thêm..." className="tw3-textarea tw3-textarea--autogrow jsTextAreaAutoGrow jsQuestionExplanation" onChange={this.handleChange} name="explanation" maxLength="250" value={this.state.value}/>
+                                </div>
+                                <div className="tw3-col-4 text--right">
+                                    <input type="submit" defaultValue="Gửi" className="tw3-qAndA__explanation__send tw3-qAndA__explanation__send--disabled jsQuestionExplanationSubmit mr--default"/>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    )
+                }
             </div>
 
             <div className="tw3-field__editIcon">
@@ -72,8 +100,8 @@ class ViewQuestionItem extends React.Component{
     }
 }
 function mapStateToProps(state){
-    const { AnsweredQuestion }=state;
-    return { AnsweredQuestion };
+    const { authentication }=state;
+    return { authentication };
 }
 const connected = connect(mapStateToProps)(ViewQuestionItem);
 export { connected as ViewQuestionItem }
