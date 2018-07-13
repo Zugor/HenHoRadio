@@ -60,7 +60,7 @@ class QaModal extends React.Component{
         return(
 <div className="jsQaModalContent" data-questionid={_data.question_id}>
 <form onSubmit={this.handleSubmit}>
-    {'answer' in _data &&
+    {data && data.answer_id &&
     <a className="tw3-box--qAndA__delete jsQuestionDelete right tw3-tooltip jsTooltip cp" href="javascript://" onClick={this.deleteAnswer} data-text="Xóa và bỏ qua câu hỏi">
         <i className="tw3-iconTrash tw3-iconMedium tw3-iconGrey right"></i>
     </a>
