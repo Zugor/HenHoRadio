@@ -18,7 +18,7 @@ class Modal extends React.Component{
         return (
         <div>    
         { (modal.modals.length > 0) ? (
-            <div className={ `tw3-modal  ${modal.modals[index].className}   tw3-modal--open`}>
+            <div className={ `tw3-modal ${modal.modals[index].className} tw3-modal--open`}>
                 <div className="tw3-modal__overlay jsModalOverlay" onClick={this.closeModal} ></div>
                 <div className="centerBlock">
                     <div className="centerBlock__item">

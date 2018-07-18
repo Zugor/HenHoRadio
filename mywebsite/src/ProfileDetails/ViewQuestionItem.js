@@ -10,7 +10,7 @@ class ViewQuestionItem extends React.Component{
         const { data }  = this.props; 
         this.state = {
             answer_id   : data.answer_id,
-            value       : data.explanation,
+            value       : (data.explanation) ? data.explanation : '',
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleChange = this.handleChange.bind(this);
@@ -59,7 +59,7 @@ class ViewQuestionItem extends React.Component{
                 <ul className="tw3-qAndA__answerHolder mb--default">
                     { _data.answerlist.length > 0 &&
                         _data.answerlist.map((e,i)=>{                         
-                            return (<li key={i} className={`tw3-qAndA__answer${ (data.answer == i) ? ' tw3-qAndA__answer--answered tw3-qAndA__answer--acceptable' :'' }`} style={{textTransform: 'capitalize'}}>
+                            return (<li key={i} className={`tw3-qAndA__answer${ (_data.answer == +!i && _data.answerlist.length==2) || (_data.answer == i && _data.answerlist.length!=2) ? ' tw3-qAndA__answer--answered tw3-qAndA__answer--acceptable' :'' }`} style={{textTransform: 'capitalize'}}>
                                         <i className="tw3-qAndA__answer__bullet"></i>{e}
                                     </li>)
                         })

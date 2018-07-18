@@ -24,7 +24,7 @@ class SmartOnBoarding_Step2 extends React.Component{
         
         const user_id = authentication.loggedIn ? authentication.user.user_id : '';
         const question_id = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question_id : '' ;
-        dispatch(questionActions.answerQuestion(answer, question_id, user_id));
+        dispatch(questionActions.answerQuestion({answer: answer}, question_id, user_id));
         var question_num = (question.data && question.data.randomYesNoQuestion ) ? question.data.countAnsweredQuestionsForQABox : this.state.question_number;
         var question_content = (question.data && question.data.randomYesNoQuestion ) ? question.data.randomYesNoQuestion.question  : this.state.question;
         this.setState({question_number: question_num, question: question_content});   

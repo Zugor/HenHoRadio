@@ -11,6 +11,10 @@ export function questionImprove(state={},action){
             return {
                 loading: true
             }
+        case questionConstants.ANSWER_IMPROVE_QUESTION_REQUEST:
+            return {
+                loading: true
+            }
 
         case questionConstants.GET_QUESTION_IMPROVE_SUCCESS:
             //console.log(state);
@@ -22,6 +26,11 @@ export function questionImprove(state={},action){
             return {
                 data: action.question
             }
+        case questionConstants.ANSWER_IMPROVE_QUESTION_SUCCESS:
+            //console.log(state);
+            return {
+                data: action.question
+            }
 
         case questionConstants.GET_QUESTION_IMPROVE_FAILURE:
             //console.log(state);
@@ -29,6 +38,11 @@ export function questionImprove(state={},action){
                 error: action.error
             }
         case questionConstants.SKIP_QUESTION_IMPROVE_FAILURE:
+            //console.log(state);
+            return {
+                error: action.error
+            }
+        case questionConstants.ANSWER_IMPROVE_QUESTION_FAILURE:
             //console.log(state);
             return {
                 error: action.error

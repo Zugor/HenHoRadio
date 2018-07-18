@@ -656,6 +656,60 @@ router.post("/question/improve/get",function(req,res,next){
         else res.json({ status: true , randomQuestion: results });
     })
 });
+router.post("/question/improve/answer",function(req,res,next){
+    let answer_id=Uuid.random();
+    let params=req.body;
+    var PARAMS_IS_VALID={};
+    var results={};
+    var queries=[];
+    var question_object={};
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID["answer_id"]       = answer_id;
+            PARAMS_IS_VALID["user_id"]         = (params.user_id) ? models.uuidFromString(params.user_id) : null;
+            PARAMS_IS_VALID["question_id"]     = (params.question_id) ? models.uuidFromString(params.question_id) : null;
+            PARAMS_IS_VALID["answer"]          = (params.answer) ? Number(params.answer) : 0 ;
+            PARAMS_IS_VALID["answer_accepted"] = (params.answer_accepted) ? params.answer_accepted : [0,0];
+
+            PARAMS_IS_VALID["answer_accepted"][PARAMS_IS_VALID.answer] = 1;
+            if(params.explanation) PARAMS_IS_VALID["explanation"]      = params.explanation;
+            if(params.importance)  PARAMS_IS_VALID["importance"]       = params.importanc;
+            if(params.private)     PARAMS_IS_VALID["private"]          = params.private;
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.questions.find({question_id: PARAMS_IS_VALID["question_id"]},function(err,question){
+                question_object=(question && question.length > 0) ? question[0] : {question_id: PARAMS_IS_VALID["question_id"]};
+                callback(err,null);
+            })
+        },
+        function(callback){
+            const answer=()=>{
+                let object      ={...PARAMS_IS_VALID, ...question_object};
+                let instance    =new models.instance.answer_by_user(object);
+                let save        =instance.save({return_query: true});
+                return save;
+            }
+            queries.push(answer());
+            models.doBatch(queries,function(err){
+                callback(err,null);
+            });
+            // Batch Query
+        },
+        function(callback){
+            models.instance.questions.find({},{select:['question_id','question']},function(err,questions){
+                results=(questions && questions.length > 0) ? questions[randomInt(0,questions.length)] : null;
+                callback(err,null);
+            })
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({ status: true , randomQuestion: results });
+    })
+});
 router.post("/question/answered/get",function(req,res,next){
     let params=req.body;
     var uuid="";
@@ -772,8 +826,8 @@ router.post("/question/answered/update",function(req,res,next){
             if(params.answer_accepted) PARAMS_IS_VALID["answer_accepted"][PARAMS_IS_VALID.answer] = 1;
             
             if(params.explanation) PARAMS_IS_VALID["explanation"]      = params.explanation;
-            if(params.importance)  PARAMS_IS_VALID["importance"]       = params.importanc;
-            if(params.private)     PARAMS_IS_VALID["private"]          = params.private;
+            if(params.importance)  PARAMS_IS_VALID["importance"]       = Number(params.importance);
+            if(params.private)     PARAMS_IS_VALID["private"]          = Number(params.private);
 
             callback(null,null);
         },

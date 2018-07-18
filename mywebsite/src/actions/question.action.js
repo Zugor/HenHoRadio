@@ -10,6 +10,7 @@ export const questionActions={
     skipQuestionImprove,
     updateAnsweredQuestion,
     deleteAnsweredQuestion,
+    answerImproveQuestion,
 }
 function getQuestion(user_id){
     return dispatch=>{
@@ -114,4 +115,17 @@ function deleteAnsweredQuestion(answer_id, user_id){
     function request(answer_id){ return { type: questionConstants.DELETE_ANSWERED_QUESTION_REQUEST, answer_id}};
     function success(question){ return { type: questionConstants.DELETE_ANSWERED_QUESTION_SUCCESS, question}};
     function failure(error){ return { type: questionConstants.DELETE_ANSWERED_QUESTION_FAILURE, error}};
+}
+function answerImproveQuestion(answer, question_id, user_id){
+    return dispatch=>{
+        dispatch(request());
+        questionService.answerImproveQuestion(answer, question_id, user_id)
+            .then(
+                question    => dispatch(success(question)),
+                error   => dispatch(failure(error))
+        )
+    }
+    function request(answer){ return { type: questionConstants.ANSWER_IMPROVE_QUESTION_REQUEST}};
+    function success(question){ return { type: questionConstants.ANSWER_IMPROVE_QUESTION_SUCCESS,question}};
+    function failure(error){ return { type: questionConstants.ANSWER_IMPROVE_QUESTION_FAILURE,error}};
 }
