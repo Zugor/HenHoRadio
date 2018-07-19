@@ -9,7 +9,7 @@ class QaModal extends React.Component{
         var {data} = this.props;
         this.state={
             answer_id : (data && data.answer_id) ? data.answer_id : null,
-            answer  : (data && data.answer) ? data.answer : null,
+            answer  : (data && data.answer >= 0) ? data.answer : null,
             accepted : (data && data.answer_accepted) ? data.answer_accepted : null,
             importance : (data && data.importance) ? data.importance : null,
             disabled  : (data && data.answer != null  && data.importance != null  && data.answer_accepted) ? 0 : 1,
@@ -36,12 +36,22 @@ class QaModal extends React.Component{
         }
     }
     handleChange(event) {
+        var accepted = [];
         var name = event.target.name;
         var value = event.target.value;
+        var _data = this.refs;
 
-        this.setState({[name]: value});
-        if(this.state.answer != null && this.state.importance != null)
+        if(_data.accepted) _data.accepted.childNodes.forEach(function (item) {
+            accepted.push(+item.childNodes[0].childNodes[0].checked);
+        });
+
+        var answer_object = {[name] : value}
+        answer_object['accepted'] = accepted;
+        this.setState(answer_object);
+        
+        if((name=='accepted' && accepted.indexOf(1)>=0 && this.state.importance != null && this.state.answer != null) || (name=='answer' && this.state.importance != null && accepted.indexOf(1)>=0) || (name=='importance' && this.state.answer != null && accepted.indexOf(1)>=0))
             this.setState({disabled: 0});
+        else if (name=='explanation'){}
         else
             this.setState({disabled: 1});
     }
@@ -104,12 +114,12 @@ class QaModal extends React.Component{
     </div>
     <h4 className="tw3-qAndA__question text--bold pb--default">{_data.question}</h4>
     <ul className="tw3-qAndA__answerHolder mb--default mb--loose">
-        { _data.answerlist.length > 0 &&
+        { _data.answerlist &&
             _data.answerlist.map((e,i)=>{   
 
                 return (<li key={i}>
                     <label>
-                        <input type="radio" defaultChecked={(_data.answer === +!i && _data.answerlist.length==2) || (_data.answer === i && _data.answerlist.length!=2)} name="answer" defaultValue={_data.answerlist.length>2 ? +!i : i} className="mr--compact tw3-radio--custom"/>
+                        <input type="radio" ref="answer" defaultChecked={(_data.answer === +!i && _data.answerlist.length==2) || (_data.answer === i && _data.answerlist.length!=2)} name="answer" defaultValue={_data.answerlist.length>2 ? +!i : i} className="mr--compact tw3-radio--custom"/>
                         <span style={{textTransform: 'capitalize'}}>{e}</span>
                     </label>
                     </li>)
@@ -118,11 +128,9 @@ class QaModal extends React.Component{
     </ul>
 
     <h6 className="text--subtle text--upper">Những câu trả lời bạn có thể chấp nhận</h6>
-    <ul className="tw3-qAndA__answerHolder mb--default mb--loose">
-        { _data.answerlist.length > 0 &&
+    <ul className="tw3-qAndA__answerHolder mb--default mb--loose" ref="accepted">
+        { _data.answerlist &&
             _data.answerlist.map((e,i)=>{  
-                console.log(_data.answer_accepted[i]);
-                                       
                 return (<li key={i}>
                         <label>
                             <input type="checkbox" name="accepted" defaultChecked={(_data.answer_accepted[1-i] && _data.answer_accepted.length==2) || (_data.answer_accepted[i] && _data.answer_accepted.length>2)} defaultValue={_data.answerlist.length==2 ? +!i : i} className="mr--compact tw3-checkbox--custom jsAcceptedAnswer"/>
@@ -138,13 +146,13 @@ class QaModal extends React.Component{
     <div className="jsImportanceBlock">
         <ul className="tw3-qAndA__answerHolder mb--default mb--loose">
             <li>
-                <label><input type="radio" name="importance" defaultChecked={_data.importance==1} value="1" className="mr--compact tw3-radio--custom"/><span>Một chút</span></label>
+                <label><input type="radio" ref="importance" name="importance" defaultChecked={_data.importance==1} value="1" className="mr--compact tw3-radio--custom"/><span>Một chút</span></label>
             </li>
             <li>
-                <label><input type="radio" name="importance" defaultChecked={_data.importance==2} value="2" className="mr--compact tw3-radio--custom"/><span>Hơi</span></label>
+                <label><input type="radio" ref="importance" name="importance" defaultChecked={_data.importance==2} value="2" className="mr--compact tw3-radio--custom"/><span>Hơi</span></label>
             </li>
             <li>
-                <label><input type="radio" name="importance" defaultChecked={_data.importance==3} value="3" className="mr--compact tw3-radio--custom"/><span>Rất</span></label>
+                <label><input type="radio" ref="importance" name="importance" defaultChecked={_data.importance==3} value="3" className="mr--compact tw3-radio--custom"/><span>Rất</span></label>
             </li>
         </ul>
     </div>

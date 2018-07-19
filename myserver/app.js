@@ -697,7 +697,7 @@ router.post("/question/improve/answer",function(req,res,next){
             // Batch Query
         },
         function(callback){
-            models.instance.questions.find({},{select:['question_id','question']},function(err,questions){
+            models.instance.questions.find({},function(err,questions){
                 results=(questions && questions.length > 0) ? questions[randomInt(0,questions.length)] : null;
                 callback(err,null);
             })
