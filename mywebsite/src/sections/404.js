@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
-import { HeaderVisible, Header } from "./index";
+import { HeaderVisible, Header, HeaderMobile } from "./index";
 class PageNotFound extends React.Component{
     componentDidMount(){
         //this.props.dispatch(userAction.All());
@@ -11,6 +11,7 @@ class PageNotFound extends React.Component{
         return (
             <div>
             <HeaderVisible />
+            <HeaderMobile />
             <Header view={this.props.view}/>
             <section className="error_area">
                 <div className="container">

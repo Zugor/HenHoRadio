@@ -1,7 +1,8 @@
 import React from 'react';
+import { connect } from "react-redux";
 import LoadingBar from 'react-redux-loading-bar';
- 
-export default class Loading extends React.Component {
+
+class Loading extends React.Component{
   render() {
     return (
       <header>
@@ -11,3 +12,9 @@ export default class Loading extends React.Component {
     )
   }
 }
+
+function mapStateToProps(state){
+  return state;
+}
+const connected=connect(mapStateToProps)(Loading);
+export { connected as Loading } 

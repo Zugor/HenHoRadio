@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { MobileVerifyPage } from "../DialogPage";
-import { modalActions  } from "../actions";
+import { modalActions } from "../actions";
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
+import GoogleLogin from 'react-google-login';
+
 class IndexVerifiCation extends React.Component{
     constructor(props){
         super(props);
@@ -14,7 +17,26 @@ class IndexVerifiCation extends React.Component{
                                          content: <MobileVerifyPage />}))
         console.log('open modal');
     }
+    responseFacebook(response) {
+        console.log(response);
+    }
+    responseGoogle(response) {
+        console.log(response);
+    }
+    componentDidMount(){
+
+    }
     render(){
+        const { users, userDetails } = this.props;
+        var _users=(users.item && users.item.status && users.item.user.length > 0) ? users.item.user[0] : {};
+        var _userDetails=(userDetails.user && userDetails.user.status && userDetails.user.result.length > 0) ? userDetails.user.result[0] : {};
+        var _data={
+            is_active                : _users.is_active,
+            mobile_active            : _users.mobile_active,
+            phone                    : _users.phone,
+            facebook                 : _userDetails.facebook,
+            email                    : _userDetails.emails,
+        }
         return(
             <div className="tw3-profile__body__box jsIndexVerifications">
     <h5 className="jsEditableBlockTitle text--bold tw3-h5 mb--default">XÁC NHẬN</h5>
@@ -74,31 +96,72 @@ Twoo Gói Cao Cấp</span><br/>
                     </div>
                 </div>
             </div>
+            
             <div className="tw3-media tw3-media--figure--fixed tw3-media--actions--active">
                 <div className="tw3-media__figure">
-                    <i className="tw3-iconCircleFacebook tw3-iconLarge tw3-iconFacebookColor"></i>
+                    {_data.facebook ?
+                        <i className="tw3-iconCircleFacebook tw3-iconLarge tw3-iconFacebookColor"></i>
+                        :
+                        <i className="tw3-iconCircleFacebook tw3-iconLarge tw3-iconLightGrey tw3-iconBlack"></i>
+                    }
                 </div>
                 <div className="tw3-media__body">
                     <div className="tw3-media__body__actions">
-                        <i className="tw3-iconCheckThin tw3-iconGreen"></i>
+                        {_data.facebook ?
+                            <i className="tw3-iconCheckThin tw3-iconGreen"></i>
+                            :
+                            <FacebookLogin
+                            appId="1123639347752800"
+                            autoLoad
+                            callback={this.responseFacebook}
+                            render={renderProps => (
+                                <a href="javascript://" onClick={renderProps.onClick} className="tw3-button tw3-button--full tw3-button--blue tw3-button--rounded tw3-button--small tw3-button--subtle tw3-button--wrap jsClose" >Xác nhận</a>
+                            )}
+                            />
+                        }
                     </div>
                     <div className="tw3-media__body__content">
                         <span className="text--subtle">Facebook</span><br/>
-                        <span>Đã xác nhận</span>
+                        {_data.facebook ?
+                            <span>Đã xác nhận</span>
+                            :
+                            <span>Chưa xác nhận</span>
+                        }
                     </div>
                 </div>
             </div>
+
+
             <div className="tw3-media tw3-media--figure--fixed tw3-media--actions--active">
                 <div className="tw3-media__figure">
-                    <i className="tw3-iconCircleGoogle tw3-iconLarge tw3-iconGoogleColor"></i>
+                    {_data.email ?
+                        <i className="tw3-iconCircleGoogle tw3-iconLarge tw3-iconGoogleColor"></i>
+                        :
+                        <i className="tw3-iconCircleGoogle tw3-iconLarge tw3-iconLightGrey tw3-iconBlack"></i>
+                    }
                 </div>
                 <div className="tw3-media__body">
                     <div className="tw3-media__body__actions">
-                        <i className="tw3-iconCheckThin tw3-iconGreen"></i>
+                        {_data.email ?
+                            <i className="tw3-iconCheckThin tw3-iconGreen"></i>
+                            :
+                            <GoogleLogin
+                                clientId="413062312255-hsf4tds7ho89u15dmqlrhni40angs2hp.apps.googleusercontent.com"
+                                buttonText="Xác nhận"
+                                tag="a"
+                                className="tw3-button tw3-button--full tw3-button--blue tw3-button--rounded tw3-button--small tw3-button--subtle tw3-button--wrap jsClose"
+                                onSuccess={this.responseGoogle}
+                                onFailure={this.responseGoogle}
+                            />
+                        }
                     </div>
                     <div className="tw3-media__body__content">
                         <span className="text--subtle">Google</span><br/>
-                        <span>Đã xác nhận</span>
+                        {_data.email ?
+                            <span>Đã xác nhận</span>
+                            :
+                            <span>Chưa xác nhận</span>
+                        }
                     </div>
                 </div>
             </div>
@@ -126,21 +189,32 @@ Xác nhận
             <div className="tw3-media tw3-media--figure--fixed tw3-media--actions--active">
                 <div className="tw3-media__figure">
                     <a href="javascript://" className="jsPaywall" >
-<i className="tw3-iconCirclePhone tw3-iconLarge tw3-iconLightGrey tw3-iconBlack"></i>
-</a>
+                        {_data.mobile_active ?
+                            <i className="tw3-iconCirclePhone tw3-iconLarge tw3-iconPhoneColor"></i>
+                            :
+                            <i className="tw3-iconCirclePhone tw3-iconLarge tw3-iconLightGrey tw3-iconBlack"></i>
+                        }
+                    </a>
                 </div>
                 <div className="tw3-media__body">
                     <div className="tw3-media__body__actions">
-                        <a href="javascript://" onClick={()=>{this.MobileVerification()}} className="tw3-button tw3-button--full tw3-button--blue tw3-button--rounded tw3-button--small tw3-button--subtle tw3-button--wrap jsPaywall jsClose" >
-Xác nhận
-</a>
+                        {_data.mobile_active ?
+                            <i className="tw3-iconCheckThin tw3-iconGreen"></i>
+                            :
+                            <a href="javascript://" onClick={()=>{this.MobileVerification()}} className="tw3-button tw3-button--full tw3-button--blue tw3-button--rounded tw3-button--small tw3-button--subtle tw3-button--wrap jsPaywall jsClose" >Xác nhận</a>
+                        }
                     </div>
                     <div className="tw3-media__body__content">
                         <span className="text--subtle">Số điện thoại</span><br/>
-                        <span>Chưa xác nhận</span>
+                        {_data.mobile_active ?
+                            <span>Đã xác nhận</span>
+                            :
+                            <span>Chưa xác nhận</span>
+                        }
                     </div>
                 </div>
             </div>
+
             <div className="tw3-media tw3-media--figure--fixed tw3-media--actions--active">
                 <div className="tw3-media__figure">
                     <a href="javascript://" className="jsClose jsLinkedinConnect" >
@@ -203,7 +277,8 @@ Xác nhận
     }
 }
 function mapStateToProps(state){
-    return state;
+    const { users, userDetails } = state;
+    return { users, userDetails };
 }
 const connected = connect(mapStateToProps)(IndexVerifiCation);
 export { connected as IndexVerifiCation }

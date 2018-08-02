@@ -1,6 +1,7 @@
 import { combineReducers } from "redux";
 import { authentication } from "./authentication.reducer";
 import { registration } from "./registration.reducer";
+import { loadingBarReducer } from 'react-redux-loading-bar'
 import { users } from "./users.reducer";
 import { alert } from "./alert.reducer";
 import { image } from "./image.reducer";
@@ -8,7 +9,6 @@ import { modal } from "./modal.reducer";
 import { memberActive } from "./member.active.reducer";
 import { imageUpload } from "./image.upload.reducer";
 import { like } from "./like.reducer";
-import { loadingBarReducer } from 'react-redux-loading-bar'
 import { userDetails } from "./user.details.reducer";
 import { page } from "./page.reducer";
 import { userUpdate } from "./user.update.reducer";
@@ -18,6 +18,7 @@ import { memberDetail } from "./member.reducer";
 import { question } from "./question.reducer";
 import { questionImprove } from "./question.improve.reducer";
 import { answeredQuestion } from "./question.answered.reducer";
+import { payment } from "./payment.reducer";
 
 const rootReducer=combineReducers({
     authentication,
@@ -39,5 +40,6 @@ const rootReducer=combineReducers({
     question,
     answeredQuestion,
     questionImprove,
+    payment,
 });
 export default rootReducer;

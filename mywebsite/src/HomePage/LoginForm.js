@@ -3,6 +3,9 @@ import {connect} from "react-redux";
 import { pageActions,modalActions,userActions } from "../actions";
 import {Redirect } from "react-router-dom";
 import { ForgetPasswordModal } from "./index";
+import FacebookLogin from 'react-facebook-login';
+import GoogleLogin from 'react-google-login';
+
 const MESSAGE=require('../data/formValid').loginDesktop
 class LoginForm extends React.Component{
     constructor(props){
@@ -86,6 +89,12 @@ class LoginForm extends React.Component{
             }
         }
     }
+    responseFacebook(response) {
+        console.log(response)
+    }
+    responseGoogle(response) {
+        console.log(response)
+    }
     compoentDidMount(){
         const { dispatch } = this.props;
         //dispatch()
@@ -129,7 +138,27 @@ class LoginForm extends React.Component{
             </p>
             <div className="mb--tight">
                <div className="jsLoginOptions">
-
+                    <GoogleLogin
+                        clientId="413062312255-hsf4tds7ho89u15dmqlrhni40angs2hp.apps.googleusercontent.com"
+                        onSuccess={this.responseGoogle}
+                        onFailure={this.responseGoogle}
+                        className="kep-login-facebook kep-login-facebook-medium"
+                        style={{background: 'rgb(209, 72, 54)', border : 'none', marginBottom: '10px'}}
+                    >
+                    <i class="fa fa-google"></i>
+                    <span>Đăng nhập với Google</span>
+                    </GoogleLogin>
+                    <br/>
+                    <FacebookLogin
+                        appId="1123639347752800"
+                        autoLoad={true}
+                        textButton="Đăng nhập với Facebook"
+                        language="vi_VN"
+                        size="medium"
+                        icon="fa-facebook"
+                        fields="name,email,picture"
+                        callback={this.responseFacebook}
+                    />
                </div>
             </div>
             <small>(Đăng nhập cách này nhanh hơn, chúng tôi không bao giờ đăng lên Facebook của bạn)</small>

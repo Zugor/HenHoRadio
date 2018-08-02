@@ -4,4 +4,4 @@ export * from "./image.constants";
 export * from "./modal.constants";
 export * from "./page.constants";
 export * from "./question.constants";
-
+export * from "./payment.constants";

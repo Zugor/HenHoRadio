@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { LoginPopup,RegisterPopup,Header,AdvancedSearch,RegisterMember,MemberActive, Banner, HeaderVisible } from "../sections";
+import { LoginPopup,RegisterPopup,Header,AdvancedSearch,RegisterMember,MemberActive, Banner, HeaderVisible, HeaderMobile } from "../sections";
 import { LikeBoxView } from "./index";
 class LikePage extends React.Component{
     
@@ -9,7 +9,7 @@ class LikePage extends React.Component{
         
         
         document.getElementsByTagName('html')[0].setAttribute('class', 'flexbox css3 notouch');
-        document.body.className='activity activity--likes ltr vi macintosh chrome mastheadShown';
+        document.body.className='activity activity--likes ltr vi macintosh chrome';
     }
     componentWillUnmount(){
         document.getElementsByTagName('html')[0].setAttribute('class', 'flexbox css3 notouch');
@@ -20,6 +20,7 @@ class LikePage extends React.Component{
         return (
            <div className="popup-inner"> 
                 <HeaderVisible />
+                <HeaderMobile />
                 <Header view={this.props.view}/>
                 <LikeBoxView />
             </div>

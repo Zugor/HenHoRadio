@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { BoxViewMember } from "./BoxViewMember";
 import { userActions, modalActions } from "../actions";
 import LoadingBar from 'react-redux-loading-bar';
-import { LoginPopup,RegisterPopup,Header,AdvancedSearch,RegisterMember,MemberActive, Banner, HeaderVisible } from "../sections";
+import { LoginPopup,RegisterPopup,Header,AdvancedSearch,RegisterMember,MemberActive, Banner, HeaderVisible, HeaderMobile } from "../sections";
 
 class HomePageLogin extends React.Component{
     constructor(props){
@@ -36,7 +36,7 @@ class HomePageLogin extends React.Component{
         this.props.dispatch(modalActions.closeModal());
         
         document.getElementsByTagName('html')[0].setAttribute('class', 'flexbox css3 notouch');
-        document.body.className='search ltr vi macintosh chrome mastheadShown';
+        document.body.className='search ltr vi macintosh chrome';
     }
     componentWillUnmount(){
         document.getElementsByTagName('html')[0].setAttribute('class', 'flexbox css3 notouch');
@@ -59,6 +59,7 @@ class HomePageLogin extends React.Component{
                     <LoadingBar />
                 </header> 
                 <HeaderVisible />
+                <HeaderMobile />
                 <Header view={this.props.view}/>
                 <BoxViewMember page={page} />
             </div>

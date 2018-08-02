@@ -3,14 +3,13 @@ import { Link, Redirect,Router,Route, Switch } from "react-router-dom";
 import { history } from "../store";
 import { connect } from "react-redux";
 import { userActions } from "../actions";
-import { Header, HeaderVisible, SmartOnBoarding } from "../sections";
+import { Header, HeaderVisible, SmartOnBoarding, HeaderMobile } from "../sections";
 import { ViewInfo, IndexDetails } from "./index";
+
 class ProfileDetailPage extends React.Component{
     constructor(props){
         super(props);
-        
     }
-    
 
     componentWillUpdate(nextProps){
         const { location } = this.props;
@@ -29,8 +28,7 @@ class ProfileDetailPage extends React.Component{
             
         }
         document.getElementsByTagName('html')[0].setAttribute('class', 'flexbox css3 notouch');
-        document.body.className='profilev4 ltr vi macintosh chrome mastheadShown';
-        
+        document.body.className='profilev4 ltr vi macintosh chrome';
     }
     render(){
         const { authentication }=this.props;
@@ -47,13 +45,16 @@ class ProfileDetailPage extends React.Component{
             <div>
                     <Header />
                     <HeaderVisible />
-                    <SmartOnBoarding/>
-                    <div className="tw3-content jsProfile">
-                        <div className="tw3-container pos--rel">
-                            <div className="tw3-row">
-                                <ViewInfo />
-                                
-                                <IndexDetails />
+                    <HeaderMobile />
+                    <div className="tw3-wrapper">
+                        <SmartOnBoarding/>
+                        <div className="tw3-content jsProfile">
+                            <div className="tw3-container pos--rel">
+                                <div className="tw3-row">
+                                    <ViewInfo />
+                                    
+                                    <IndexDetails />
+                                </div>
                             </div>
                         </div>
                     </div>

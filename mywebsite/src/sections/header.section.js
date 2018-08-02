@@ -2,6 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { userActions } from "../actions";
+import { Loading } from "../sections";
+
 class Header extends React.Component{
     constructor(props){
         super(props);
@@ -11,7 +13,7 @@ class Header extends React.Component{
     this.handleHeaderPointerMenuActivityToggle=this.handleHeaderPointerMenuActivityToggle.bind(this);
     }
     componentDidMount(){
-        const { authentication } = this.props;
+        const { authentication, dispatch } = this.props;
         var userid="";
         if(authentication.loggedIn){
             //console.log(this.props);
@@ -27,6 +29,9 @@ class Header extends React.Component{
         this.setState({
             menuActive : !currentState
         })
+    }
+    handleHeaderMobileToggle(){
+        document.getElementsByTagName('body')[0].classList.toggle('tw3-header--mobile--menu--visisble');
     }
     render(){
         //console.log(this.state.menuActive);
@@ -57,8 +62,8 @@ class Header extends React.Component{
         //console.log(this.props);
        // {`${hostname}:3001/image/t/${_data.preview_thumbnail}`}
        return (
-             
- <div className="tw3-headerV2   tw3-headerV2--navigation--visible jsHeader">        
+ <div className="tw3-headerV2 tw3-headerV2--navigation--visible jsHeader">  
+    <Loading/>
     <div className="tw3-headerV2--mobile jsHeaderMobile">
         <div className="tw3-tabsHolder">
             <a href="/game" className="tw3-tab ">
@@ -75,7 +80,7 @@ class Header extends React.Component{
             <a href="/activitycenter" className="tw3-tab jsActivitycenterPopover ">
                <i className="tw3-iconAlert tw3-iconGrey  tw3-iconBig tw3-iconBadge"></i>
             </a>
-            <a href="javascript:;" className="tw3-tab tw3-headerV2MenuToggle jsMobileHeaderPointerMenuToggle">
+            <a href="javascript:;" className="tw3-tab tw3-headerV2MenuToggle jsMobileHeaderPointerMenuToggle" onClick={this.handleHeaderMobileToggle}>
                <i className="tw3-iconDotsOutline tw3-iconBig tw3-iconBadge pt--tight">
                     <span className="badge--darkRed jsCount bounce"   style={{display:'none'}}></span>
                </i>

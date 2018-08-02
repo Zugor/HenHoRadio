@@ -24,7 +24,7 @@ app.set('view engine','ejs');
 app.set('views',path.join(__dirname,'views'));
 
 app.use(function(req,res,next){
-    res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000');
+    res.setHeader('Access-Control-Allow-Origin', 'http://henhoradio.com:3000');
 
     // Request methods you wish to allow
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -44,7 +44,10 @@ const MESSAGE={
     USER_NOT_MATCH      : "Tài khoản hoặc mật khẩu không đúng",
     USER_NOT_FOUND      : "Tài khoản này không tồn tại!",
     USER_HAD_BANNED     : "Tài khoản đang bị khoá",
-    SYSTEM_BUSY         : "Hệ thống bận!"
+    SYSTEM_BUSY         : "Hệ thống bận!",
+    PAYMENT_NOT_SEND_OTP: "Bạn chưa nhắn tin xác thực! Hãy nhắn tin tới tổng đài.",
+    PAYMENT_OTP_OK      : "Xác thực thành công!",
+    PAYMENT_OTP_WRONG   : "OTP không chính xác.",
 };
 router.post("/user/authenticate",function(req,res,next){
     var params=req.body;
@@ -1661,6 +1664,133 @@ router.post("/user/delete/image",function(req,res,next){
                 else res.json({status: true,result: params});
             })
         }
+    })
+});
+
+router.post("/payment/checkSendOTP",function(req,res,next){
+    let params=req.body;
+    var PARAMS_IS_VALID={};
+    var results={};
+    async.series([
+        function(callback){
+            try{
+                PARAMS_IS_VALID['user_id']= models.uuidFromString(params.id);
+                PARAMS_IS_VALID['phone'] = params.phone,
+
+                callback(null,null);
+            }catch(e){
+                callback(e,null);
+            }
+
+        },
+        function(callback){
+            models.instance.otp.find({ phone: PARAMS_IS_VALID.phone},{select :["phone","status"]},function(err,otp){
+                results = (otp && otp.length > 0) ? {error : 0} : {error : 1, message: MESSAGE.PAYMENT_NOT_SEND_OTP};
+                callback(err,null);
+            })
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({ status: true , results });
+    })
+});
+router.get("/payment/sendOTP/:token/:phone",function(req,res,next){
+    const rand=(max,min)=>{ return (Math.floor(Math.random() * (max - min + 1)) + min) };
+    let {params}=req;
+    var otpcode = rand(987678,154321);
+    var otp_object={}
+    var PARAMS_IS_VALID={};
+    var results={};
+    var queries=[];
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID['phone'] = params.phone;
+            PARAMS_IS_VALID['token'] = params.token;
+            otp_object={phone: PARAMS_IS_VALID.phone, otp: otpcode};
+            callback(null,null);
+        },
+        function(callback){
+            const otp=()=>{
+                let object      =otp_object;
+                let instance    =new models.instance.otp(object);
+                let save        =instance.save({return_query: true});
+                return save;
+            }
+            queries.push(otp());
+            models.doBatch(queries,function(err){
+                results=otp_object;
+                callback(err,null);
+            });
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, message: err});
+        else res.json({ status: true , results });
+    })
+});
+router.post("/payment/checkOTP",function(req,res,next){
+    let params=req.body;
+    var PARAMS_IS_VALID={};
+    var queries=[];
+    async.series([
+        function(callback){
+            try{
+                PARAMS_IS_VALID['user_id']= models.uuidFromString(params.id);
+                PARAMS_IS_VALID['phone'] = params.phone,
+                PARAMS_IS_VALID['otp'] = Number(params.otp),
+
+                callback(null,null);
+            }catch(e){
+                callback(e,null);
+            }
+
+        },
+        function(callback){
+            models.instance.otp.find({ phone: PARAMS_IS_VALID.phone, otp: PARAMS_IS_VALID.otp },{select :["phone","status"]},function(err,otp){
+                otp && otp.length > 0 ? callback(null,null) : callback(MESSAGE.PAYMENT_OTP_WRONG,null);
+            })
+        },
+        function(callback){
+            var query_object = { phone: PARAMS_IS_VALID.phone, otp: PARAMS_IS_VALID.otp };
+            var update_values_object = {status : true};
+            var options = {ttl: 86400, if_exists: false};
+
+            models.instance.otp.update(query_object, update_values_object, options,function(err){
+                callback(err,null);
+            })
+        },
+        function(callback){
+            var query_object = { user_id: PARAMS_IS_VALID.user_id};
+            var update_values_object = {mobile_active : true, phone: PARAMS_IS_VALID.phone};
+            var options = {ttl: 86400, if_exists: false};
+
+            models.instance.Users.update(query_object, update_values_object, options,function(err){
+                callback(err,null);
+            })
+        },
+        function(callback){
+            const otp=()=>{
+                let object      ={...PARAMS_IS_VALID, ...{status: true}};
+                let instance    =new models.instance.otp_by_user(object);
+                let save        =instance.save({return_query: true});
+                return save;
+            }
+            queries.push(otp());
+            models.doBatch(queries,function(err){
+                callback(err,null);
+            });
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, results: {error: 1, message: err}});
+        else res.json({ status: true , results: {error: 0, message: MESSAGE.PAYMENT_OTP_OK} });
     })
 });
 

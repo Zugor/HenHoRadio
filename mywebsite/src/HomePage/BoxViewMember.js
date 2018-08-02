@@ -15,6 +15,7 @@ class BoxViewMember extends React.Component{
         const {memberActive,like} = this.props;
         const data=(memberActive.items && memberActive.items.users ) ? memberActive.items.users : [];
         return(
+        <div className="tw3-wrapper">
             <div className="tw3-content">
                 <div className="tw3-search__results">
                     <div className="tw3-container">
@@ -47,6 +48,7 @@ class BoxViewMember extends React.Component{
                     </div>
                 </div>
             </div>
+        </div>
         )
     }
 }

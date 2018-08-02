@@ -3,6 +3,7 @@ export * from "./loading.bar.header";
 
 export * from "./register.popup";
 export * from "./header.section";
+export * from "./header.mobile.section";
 export * from "./header.visible.section";
 export * from "./slider.area.section";
 export * from "./register.form.section";
