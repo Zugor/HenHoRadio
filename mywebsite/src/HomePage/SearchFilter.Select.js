@@ -1,7 +1,7 @@
 import React from "react";
 import {connect} from "react-redux";
 import Select from 'react-select';
-import {userActions} from "../actions";
+
 class Combobox extends React.Component{
     constructor(props){
         super(props);
@@ -26,13 +26,6 @@ class Combobox extends React.Component{
 			selectValue: newValue,
             onselect: true,
 		});
-        const { dispatch ,authentication, field } = this.props;
-        const user={
-            field   : field.key,
-            user_id : (authentication.loggedIn) ? authentication.user.user_id : '',
-            value   : newValue,
-        }
-        dispatch(userActions.updateDetails(user));
 	};
     render(){
         const { options } = this.state;
@@ -49,8 +42,12 @@ class Combobox extends React.Component{
 					name={this.state.field.key}
 					disabled={this.state.disabled}
 					value={(this.state.onselect) ? this.state.selectValue : selectValue}
+					onChange={this.updateValue}
 					searchable={this.state.searchable}
                     placeholder={this.state.placeholder}
+                    style={{container: () => ({
+                        zIndex : 3
+                      })}}
 				/>
         )
     }

@@ -14,6 +14,11 @@ class SmartOnBoarding_Step1 extends React.Component{
     }
     render(){
         const {users} = this.props;
+        var _users=(users.item && users.item.status && users.item.user.length > 0) ? users.item.user[0] : {};
+        var _data={
+            id                  : _users ? _users.id : null,
+            name                : _users ? _users.fullname : null,
+        }
         return(
             <div id="smart-onboarding-1" className="tw3-smartOnboarding__step tw3-smartOnboarding--step1">
                 <div className="tw3-mediav2 tw3-mediav2--auto">
@@ -21,7 +26,7 @@ class SmartOnBoarding_Step1 extends React.Component{
                         <img src="https://twoo-a.akamaihd.net/static/757517345581938776/images/v3/onboarding/img-picture.png" width="56" height="56" className="mh--default"/>
                     </div>
                     <div className="tw3-mediav2__body text--white tw3-h5 text--bold">
-                    {users}, chào mừng bạn vào HenHoRadio! Tải một hình đại diện lên để bắt đầu sử dụng HenHoRadio.
+                    {_data.name}, chào mừng bạn vào HenHoRadio! Tải một hình đại diện lên để bắt đầu sử dụng HenHoRadio.
                     </div>
                     <div className="tw3-mediav2__actions">
                         <a href="javascript://" className="tw3-button tw3-button--white tw3-button--rounded jsUploaderTrigger" data-type="PROFILE" onClick={this.handleAddPreviewThumbnail}>Thêm hình</a>

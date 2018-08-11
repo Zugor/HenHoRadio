@@ -22,7 +22,9 @@ export const userService= {
     updateUser,
     search,
     updateDetails,
-    delete: _delete
+    delete: _delete,
+    verifyFacebook,
+    verifyGoogle,
 }
 const api={
     login           :"/user/authenticate",
@@ -34,7 +36,9 @@ const api={
     uploadImageByUser   :"/user/image/upload",
     updateDetails   : "/api/update/detail",
     deleteImageByUser: '/user/delete/image',
-    updateImageByUser: '/user/update/image'
+    updateImageByUser: '/user/update/image',
+    verifyFacebook  :"/login/OAuth/facebook",
+    verifyGoogle    :"/login/OAuth/google",
     
 }
 function login(username,password,return_url){
@@ -232,6 +236,23 @@ function forgetPassword(phone){
     }
     return fetch("/user/forgetpassword/"+phone,requestOptions).then(handleResponse);
 }
+function verifyFacebook(id, obj){
+    const requestOptions={
+        method: 'POST',
+        headers: {...authHeader(), 'Content-Type': 'application/json'},
+        body: JSON.stringify({id: id, authResponse: obj})
+    }
+    return fetch(api.verifyFacebook,requestOptions).then(handleResponse);
+}
+function verifyGoogle(id, obj){
+    const requestOptions={
+        method: 'POST',
+        headers: {...authHeader(), 'Content-Type': 'application/json'},
+        body: JSON.stringify({id: id, profileObj: obj})
+    }
+    return fetch(api.verifyGoogle,requestOptions).then(handleResponse);
+}
+
 function handleResponse(response){
     if(!response.ok){
         return Promise.reject(response.statusText);

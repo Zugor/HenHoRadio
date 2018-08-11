@@ -22,7 +22,8 @@ class ViewImages extends React.Component{
     render(){
         const {imageMember} = this.props;
         //console.log(image);
-        const hostname= window.location.protocol + '//' + window.location.hostname;
+        //const hostname= window.location.protocol + '//' + window.location.hostname;
+        const hostname= 'http://' + window.location.hostname;
         //console.log(hostname);
         const _img=(imageMember.image && imageMember.image.status && imageMember.image.images.length > 0  )
             ? imageMember.image.images : []; 

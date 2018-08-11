@@ -16,6 +16,7 @@ import { ImagePage } from "../ImagePage";
 import { PrivateRoute } from "../components";
 import { PageNotFound } from "../sections";
 import { LikePage } from "../LikePage";
+import { SettingPage } from "../SettingPage";
 
 
 import { history } from "../store";
@@ -71,6 +72,8 @@ class App extends Component{
                             <Route  path="/profile/:uuid" component={ ProfilePage }  >
                             </Route>
                             <Route exact path="/profile" component={ ProfileDetailPage }  >
+                            </Route>
+                            <Route exact path="/settings" component={ SettingPage }  >
                             </Route>
                             <Route exact path="/search" render={(props) => (
                                 <HomePageLogin {...props} view="search" />

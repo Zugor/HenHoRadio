@@ -23,6 +23,7 @@ class LoginForm extends React.Component{
         this.onInputUsernameBlur=this.onInputUsernameBlur.bind(this);
         this.onInputPasswordBlur=this.onInputPasswordBlur.bind(this);
         this.handleForgetPassword=this.handleForgetPassword.bind(this);
+        this.responseGoogleSuccess=this.responseGoogleSuccess.bind(this);
         
     }
     handleHomePageSwitch(view){
@@ -95,6 +96,13 @@ class LoginForm extends React.Component{
     responseGoogle(response) {
         console.log(response)
     }
+    responseGoogleSuccess(res) {
+        const { dispatch } = this.props;
+        
+        const { profileObj,accessToken }= res;
+        dispatch(userActions.login(profileObj.email,accessToken,''));
+    }
+    
     compoentDidMount(){
         const { dispatch } = this.props;
         //dispatch()
@@ -140,17 +148,17 @@ class LoginForm extends React.Component{
                <div className="jsLoginOptions">
                     <GoogleLogin
                         clientId="413062312255-hsf4tds7ho89u15dmqlrhni40angs2hp.apps.googleusercontent.com"
-                        onSuccess={this.responseGoogle}
+                        onSuccess={this.responseGoogleSuccess}
                         onFailure={this.responseGoogle}
                         className="kep-login-facebook kep-login-facebook-medium"
                         style={{background: 'rgb(209, 72, 54)', border : 'none', marginBottom: '10px'}}
                     >
-                    <i class="fa fa-google"></i>
+                    <i className="fa fa-google"></i>
                     <span>Đăng nhập với Google</span>
                     </GoogleLogin>
                     <br/>
                     <FacebookLogin
-                        appId="1123639347752800"
+                        appId="275785029894237"
                         autoLoad={true}
                         textButton="Đăng nhập với Facebook"
                         language="vi_VN"

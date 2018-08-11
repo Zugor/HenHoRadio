@@ -5,12 +5,10 @@ exports.asset_overview=[
     
 ]
 exports.home_town=[
-    'Thanh ha, Hai Duong',
-    "Thanh xuan, Ha noi",
-    'Ha giang',
-    'Tp HCM',
-    'Hai Phong',
-    'Ca mau'
+    {value:'1' , label: 'Hà Nội'},
+    {value:'2' , label: 'Hồ Chí Minh'},
+    {value:'3' , label: 'Cà mau'},
+    {value:'4' , label: 'Hải Phòng'},
 ]
 exports.heigth=[
     '145cm',

@@ -28,8 +28,9 @@ class ViewImagesMore extends React.Component{
     };
     render(){
         const { image } = this.props;
-         const hostname= window.location.protocol + '//' + window.location.hostname;
-       
+        //const hostname= window.location.protocol + '//' + window.location.hostname;
+        const hostname= 'http://' + window.location.hostname;
+        
         const _img=(image.image && image.image.status && image.image.images.length > 0  )
             ? image.image.images : []; 
         var total=_img.length;

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { MobileVerifyPage } from "../DialogPage";
-import { modalActions } from "../actions";
+import { modalActions,userActions } from "../actions";
 import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import GoogleLogin from 'react-google-login';
 
@@ -9,7 +9,8 @@ class IndexVerifiCation extends React.Component{
     constructor(props){
         super(props);
         this.MobileVerification=this.MobileVerification.bind(this);
-        
+        this.responseFacebook=this.responseFacebook.bind(this);
+        this.responseGoogle=this.responseGoogle.bind(this);
     }
     MobileVerification(){
         const { dispatch } = this.props;
@@ -18,9 +19,15 @@ class IndexVerifiCation extends React.Component{
         console.log('open modal');
     }
     responseFacebook(response) {
+        const { dispatch, authentication } = this.props;
+        var user_id=authentication.loggedIn ? authentication.user.user_id : '';
+        response.id && dispatch(userActions.verifyFacebook(user_id, response));
         console.log(response);
     }
     responseGoogle(response) {
+        const { dispatch, authentication } = this.props;
+        var user_id=authentication.loggedIn ? authentication.user.user_id : '';
+        response.googleId && dispatch(userActions.verifyGoogle(user_id, response.profileObj));
         console.log(response);
     }
     componentDidMount(){
@@ -111,8 +118,7 @@ Twoo Gói Cao Cấp</span><br/>
                             <i className="tw3-iconCheckThin tw3-iconGreen"></i>
                             :
                             <FacebookLogin
-                            appId="1123639347752800"
-                            autoLoad
+                            appId="275785029894237"
                             callback={this.responseFacebook}
                             render={renderProps => (
                                 <a href="javascript://" onClick={renderProps.onClick} className="tw3-button tw3-button--full tw3-button--blue tw3-button--rounded tw3-button--small tw3-button--subtle tw3-button--wrap jsClose" >Xác nhận</a>
@@ -277,8 +283,8 @@ Xác nhận
     }
 }
 function mapStateToProps(state){
-    const { users, userDetails } = state;
-    return { users, userDetails };
+    const { authentication, users, userDetails } = state;
+    return { authentication, users, userDetails };
 }
 const connected = connect(mapStateToProps)(IndexVerifiCation);
 export { connected as IndexVerifiCation }

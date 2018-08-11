@@ -1793,6 +1793,80 @@ router.post("/payment/checkOTP",function(req,res,next){
         else res.json({ status: true , results: {error: 0, message: MESSAGE.PAYMENT_OTP_OK} });
     })
 });
+router.post("/login/OAuth/facebook",function(req,res,next){
+    let params=req.body;
+    var results=[];
+    var PARAMS_IS_VALID={};
+    var query={}
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID['user_id']      = models.uuidFromString(params.id);
+            PARAMS_IS_VALID['private']      = params.authResponse ? params.authResponse.id      : null;
+            PARAMS_IS_VALID['name']         = params.authResponse ? params.authResponse.name    : null;
+            callback(null,null)   
+        },
+        function(callback){
+            query={
+                user_id: PARAMS_IS_VALID.user_id,
+            }
+            delete PARAMS_IS_VALID.user_id;
+            console.log(PARAMS_IS_VALID);
+            var update_values_object = {facebook: PARAMS_IS_VALID};
+            var options = {ttl: 86400, if_exists: false};
+
+            models.instance.user_by_details.update(query, update_values_object, options,function(err){
+                console.log(err);
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.user_by_details.find(query,function(err,user){
+                //console.log(err,user);
+                results=(user && user.length > 0 ) ? user : [];
+                callback(err,null);
+            })
+        }
+    ],function(err,result){
+        if(err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({status: true, result: results});
+    });
+});
+router.post("/login/OAuth/google",function(req,res,next){
+    let params=req.body;
+    var results=[];
+    var PARAMS_IS_VALID={};
+    var query={}
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID['user_id']      = models.uuidFromString(params.id);
+            PARAMS_IS_VALID['googleId']     = params.profileObj ? params.profileObj.googleId : null;
+            PARAMS_IS_VALID['email']        = params.profileObj ? params.profileObj.email : null;
+            callback(null,null)
+        },
+        function(callback){
+            query={
+                user_id: PARAMS_IS_VALID.user_id,
+            }
+            delete PARAMS_IS_VALID.user_id;
+            var update_values_object = {emails: PARAMS_IS_VALID};
+            var options = {ttl: 86400, if_exists: false};
+
+            models.instance.user_by_details.update(query, update_values_object, options,function(err){
+                callback(err,null);
+            })
+        },
+        function(callback){
+            models.instance.user_by_details.find(query,function(err,user){
+                //console.log(err,user);
+                results=(user && user.length > 0 ) ? user : [];
+                callback(err,null);
+            })
+        }
+    ],function(err,result){
+        if(err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY});
+        else res.json({status: true, result: results});
+    });
+});
 
 app.use(router);
 app.use(function(err,req,res,next){

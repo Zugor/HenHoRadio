@@ -61,21 +61,21 @@ class ViewMemberItem extends React.Component{
                         <span className="jsLikeButton"  onClick={()=>{this.handleLikeButton(data)}} >
                             <span style={{display:'none'}} className="jsLikeButtonElement button--match">
                                 <Link to="#" className="jsChatButton jsChatLink" >
-                                    <span className="tw3-tooltip jsTooltip" >
+                                    <span className="tw3-tooltip">
                                         <span className="icon"><i></i></span>
                                     </span>
                                 </Link>
                             </span>
                             { _data.liked ? (
                                 <span style={{display: "block"}} className="jsLikeButtonElement button--liked">
-                                    <span className="tw3-tooltip jsTooltip" >
-                                        <span className="fa fa-thumbs-down"><i></i></span>
+                                    <span className="tw3-tooltip">
+                                        <span className="icon"><i></i></span>
                                     </span>
                                 </span>
                                 ):(
                                 <span className="jsLikeButtonElement button--like">
                                     <span className="tw3-tooltip">
-                                        <span className="fa fa-thumbs-up"><i></i></span>
+                                        <span className="icon"><i></i></span>
                                     </span>
                                 </span>
                                 )

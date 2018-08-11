@@ -60,18 +60,18 @@ class ViewProfileDetail extends React.Component{
             iconClass: null
         }  : null;
         const dob=(data.dob_day && data.dob_month && data.dob_year) ? {
-            label   : "Sinh nhat",
+            label   : "Sinh nhật",
             value   : data.dob_day+"/"+data.dob_month+"/"+data.dob_year,
             iconClass: ''
         } : null;
         const phones=(details.phones && details.phones.private) ? {
-                    label           : 'SDT',
+                    label           : 'Số điện thoại',
                     value           : details.phones.private,
                     iconClass       : '',
         } : null;
         const facebook=(details.facebook) ? {
-                    label           : 'FB',
-                    value           : details.facebook.private,
+                    label           : 'Facebook',
+                    value           : details.facebook.name,
                     iconClass       : '',
         } : null;
         const distance=(details.distance) ? {

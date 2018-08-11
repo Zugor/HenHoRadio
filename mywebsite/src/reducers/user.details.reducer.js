@@ -13,6 +13,33 @@ export function userDetails(state={},action){
             return {
                 error: action.error
             }
+
+        case userConstants.VERIFY_FACEBOOK_REQUEST:
+            return {
+                loading: true
+            }
+        case userConstants.VERIFY_FACEBOOK_SUCCESS:
+            return {
+                user: action.user
+            }
+        case userConstants.VERIFY_FACEBOOK_FAILURE:
+            return {
+                error: action.error
+            }
+
+        case userConstants.VERIFY_GOOGLE_REQUEST:
+            return {
+                loading: true
+            }
+        case userConstants.VERIFY_GOOGLE_SUCCESS:
+            return {
+                user: action.user
+            }
+        case userConstants.VERIFY_GOOGLE_FAILURE:
+            return {
+                error: action.error
+            }
+
         default :
             return state;
             

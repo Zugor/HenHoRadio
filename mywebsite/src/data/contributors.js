@@ -43,3 +43,27 @@ module.exports.personality=[
     { value : 'redat' ,label: 'Rè dặt' },
     { value : 'nhaycam' ,label: 'Nhạy cảm' },   
 ]
+
+module.exports.title=[
+    { value : 'workingstate' ,label: 'Sự nghiệp'},
+    { value : 'education' ,label: 'Trình độ'},
+    { value : 'photos' ,label: 'Hình (cá nhân)'},
+    { value : 'Video' ,label: 'Videos'},
+    { value : 'responsiveness' ,label: 'Mức kén chọn'},
+    { value : 'relationship_status' ,label: 'Tình trạng mối quan hệ'},
+    { value : 'children' ,label: 'Con cái'},
+    { value : 'zodiac' ,label: 'Cung hoàng đạo'},
+    { value : 'sex' ,label: 'Xu hướng tình dục'},
+    { value : 'appearance' ,label: 'Hình dáng'},
+    { value : 'hight' ,label: 'Chiều cao'},
+    { value : 'haircolor' ,label: 'Màu tóc'},
+    { value : 'eyecolor' ,label: 'Màu mắt'},
+    { value : 'nation' ,label: 'Dân tộc'},
+    { value : 'income' ,label: 'Thu nhập'},
+    { value : 'drink' ,label: 'Uống'},
+    { value : 'smoking' ,label: 'Hút thuốc'},
+    { value : 'religion' ,label: 'Tôn giáo'},
+    { value : 'sport' ,label: 'Thể thao'},
+    { value : 'travel' ,label: 'Du lịch'},
+    { value : 'food' ,label: 'Thực phẩm'},
+]
