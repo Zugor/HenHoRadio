@@ -1,6 +1,7 @@
 import { authHeader } from "../store";
 export const userService= {
     login,
+    loginWith3rd,
     logout,
     register,
     getMember,
@@ -20,6 +21,8 @@ export const userService= {
     deleteImageByUser,
     updateImageByUser,
     forgetPassword,
+    checkOTPforgetpassword,
+    newPasswordForget,
     updateUser,
     search,
     updateDetails,
@@ -29,6 +32,7 @@ export const userService= {
 }
 const api={
     login           :"/user/authenticate",
+    loginWith3rd    :"/user/OAuth",
     memberActive    :"/user/member/active",
     registerMember  :"/user/register/member",
     registration    :"/user/registration",
@@ -40,6 +44,8 @@ const api={
     updateImageByUser: '/user/update/image',
     verifyFacebook  :"/login/OAuth/facebook",
     verifyGoogle    :"/login/OAuth/google",
+    checkOTPforgetpassword:"/forgot/checkOTP",
+    newPasswordForget:"/forgot/newpassword",
     
 }
 function login(username,password,return_url){
@@ -49,6 +55,27 @@ function login(username,password,return_url){
         body:JSON.stringify({username,password,return_url})
     }
     return fetch(api.login,requestOptions)
+        .then(response =>{
+            if(!response.ok){
+                return Promise.reject(response.statusText);
+            }else {
+                return response.json();
+            }
+        })
+        .then(data=>{
+            if ( data && data.user.token ){
+                localStorage.setItem('user',JSON.stringify(data.user));
+            } 
+            return data;
+        });
+}
+function loginWith3rd(id,email,data,return_url){
+    const requestOptions={
+        method:'POST',
+        headers:{ 'Content-Type': 'application/json' },
+        body:JSON.stringify({id,email,data,return_url})
+    }
+    return fetch(api.loginWith3rd,requestOptions)
         .then(response =>{
             if(!response.ok){
                 return Promise.reject(response.statusText);
@@ -241,9 +268,25 @@ function getPhone(phone){
 }
 function forgetPassword(phone){
     const requestOptions={
-        method: 'GET',
+        method: 'POST',
     }
-    return fetch("/user/forgetpassword/"+phone,requestOptions).then(handleResponse);
+    return fetch("/forgotpassword/"+phone,requestOptions).then(handleResponse);
+}
+function checkOTPforgetpassword(phone, otp){
+    const requestOptions={
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({phone: phone, otp: otp})
+    }
+    return fetch(api.checkOTPforgetpassword,requestOptions).then(handleResponse);
+}
+function newPasswordForget(pass, repass, phone, otp){
+    const requestOptions={
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({password: pass, repassword: repass, phone: phone, otp: otp})
+    }
+    return fetch(api.newPasswordForget,requestOptions).then(handleResponse);
 }
 function verifyFacebook(id, obj){
     const requestOptions={

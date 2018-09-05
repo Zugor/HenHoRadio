@@ -1,4 +1,13 @@
 @charset "UTF-8";
+.advanced-select .advanced-select__menu {
+  overflow: hidden; }
+
+.advanced-select .advanced-select__option {
+  padding: 7px 10px;
+  cursor: pointer;
+  padding-left: 30px;
+  position: relative; }
+
 .intl-tel-input {
   position: relative;
   display: block; }
@@ -291,6 +300,9 @@ header div {
 
 .state-select {
   z-index: 3; }
+
+.tw3-dropdown--custom {
+   }
 
 .tw3-flyoutMenu__content li a, .tw3-addonsContainer, .tw3-flyinMenu__activity__overflow ul.tw3-notifications li a {
   zoom: 1; }
@@ -16764,7 +16776,7 @@ html.ie9 .tw3-header__actions__item .dropDownMenu {
   margin-right: 5px; }
 
 .tw3-header__actions__item .tw3-pointerMenuToggle.active .tw3-iconDotsOutline:before {
-  content: "\EF\2030\90"; }
+  content: "\F250"; }
 
 .tw3-header__actions__item .tw3-button > i {
   font-size: 14px;
@@ -17387,7 +17399,7 @@ body.mastheadShown .tw3-headerV2--mobile {
   color: #ff7102; }
 
 .tw3-headerV2--mobile .tw3-tab.selected .tw3-iconDotsOutline:before {
-  content: "\EF\2030\90"; }
+  content: "\F250"; }
 
 .tw3-headerV2--mobile--notCenter .tw3-tab, .tw3-headerV2--withLikes .tw3-headerV2--mobile .tw3-tab {
   width: 16.6666666667%;
@@ -17462,10 +17474,10 @@ body.bg .tw3-headerV2--desktop .tw3-headerV2__navigation__item, body.el .tw3-hea
   color: #ff7102;
   font-weight: 600; }
 
-.tw3-headerV2--desktop .tw3-headerV2__navigation__item.selected {
+.tw3-headerV2--desktop .tw3-headerV2__navigation__item {
   position: relative;
   color: #ff7102; }
-  .tw3-headerV2--desktop .tw3-headerV2__navigation__item.selected a {
+  .tw3-headerV2--desktop .tw3-headerV2__navigation__item a.active {
     color: #ff7102; }
 
 .tw3-headerV2--desktop.loading:after {
@@ -17722,7 +17734,7 @@ html.ie9 .tw3-headerV2__actions__item .dropDownMenu {
   margin-right: 5px; }
 
 .tw3-headerV2__actions__item .tw3-pointerMenuToggle.active .tw3-iconDotsOutline:before {
-  content: "\EF\2030\90"; }
+  content: "\F250"; }
 
 .tw3-headerV2__actions__item .tw3-button > i {
   font-size: 14px;
@@ -25597,11 +25609,12 @@ div.infoBoxInvite > span {
   -moz-align-items: center;
   align-items: center;
   font-size: 14px;
-  background: #283740;
+  background: rgba(40, 55, 64, 0.9);
   -webkit-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
   -moz-box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
   box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.12), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
   bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   left: 20px;
   color: #fff;
   padding: 20px 10px;
@@ -25688,7 +25701,14 @@ div.infoBoxInvite > span {
 
 @media (min-width: 680px) {
   .tw3-alert--bottom {
-    font-size: 14px; } }
+    font-size: 14px; }
+  .tw3-alert--bottom:first-child {
+    -webkit-border-radius: 4px 4px 0 0;
+    -moz-border-radius: 4px 4px 0 0;
+    border-radius: 4px 4px 0 0;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box; } }
 
 @media (min-width: 480px) {
   .tw3-alert--bottom {
@@ -25700,6 +25720,19 @@ div.infoBoxInvite > span {
     background-clip: padding-box;
     max-width: 600px;
     min-width: 320px; } }
+
+.tw3-alert--bottom:last-child {
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px; }
+
+@media (min-width: 680px) {
+  .tw3-alert--bottom:last-child {
+    -webkit-border-radius: 0 0 4px 4px;
+    -moz-border-radius: 0 0 4px 4px;
+    border-radius: 0 0 4px 4px;
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box; } }
 
 @media (min-width: 680px) {
   .tw3-alert--bottom .tw3-alert__close {
@@ -38826,7 +38859,7 @@ body.el .tw3-box--qAndA--subtle .tw3-qAndA__explanation__send, body.el .tw3-box-
   width: 100%;
   height: 137px;
   background-size: 1019px 137px;
-  background-image: url("/static/83525559296931795/images/v3/404/bkg-illustration-hetero.png"); }
+  background-image: url("/img/404/bkg-illustration-hetero.png"); }
 
 @media (min-width: 680px) {
   .notfound__heroImage {
@@ -38834,7 +38867,7 @@ body.el .tw3-box--qAndA--subtle .tw3-qAndA__explanation__send, body.el .tw3-box-
     height: 274px;
     max-width: 1667px;
     background-size: 1667px 274px;
-    background-image: url("/static/066977931380244989267/images/v3/404/bkg-illustration-hetero-big.png"); }
+    background-image: url("/img/404/bkg-illustration-hetero-big.png"); }
     .notfound__heroImage:before {
       content: '';
       position: absolute;

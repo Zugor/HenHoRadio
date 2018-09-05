@@ -103,7 +103,7 @@ Bạn có thể trả lời thêm vài câu hỏi để tìm được người p
                                 <i className="tw3-iconThumbsUp tw3-iconBig"></i>
                             </div>
                             <div className="tw3-menu__title">
-                                Người thích bạn
+                                Quan tâm bạn
                                 <span data-type="likes" className="jsCount tw3-badge badge--darkRed" style={{display: 'none'}}></span>
                             </div>
                         </Link>
@@ -116,7 +116,7 @@ Bạn có thể trả lời thêm vài câu hỏi để tìm được người p
                                 <i className="tw3-iconVoteYes tw3-iconBig"></i>
                             </div>
                             <div className="tw3-menu__title">
-                                Người bạn thích
+                                Bạn quan tâm
                             </div>
                         </Link>
                     </div>

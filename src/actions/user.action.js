@@ -4,6 +4,7 @@ import { history } from "../store";
 import { userService } from "../services";
 export const userActions={
     login,
+    loginWith3rd,
     logout,
     register,
     getMemberById,
@@ -18,6 +19,8 @@ export const userActions={
     addLikeMember,
     addLikeByUser,
     forgetPassword,
+    CheckOTPforgetpassword,
+    newPasswordForget,
     likeByUser,
     getMemberDetails,
     uploadImageByUser,
@@ -58,6 +61,38 @@ function login(username,password,return_url){
     function request(user){ return {type : userConstants.LOGIN_REQUEST, user } }
     function success(user){ return {type : userConstants.LOGIN_SUCCESS, user } }
     function failure(error){ return {type : userConstants.LOGIN_FAILURE, error } }
+    
+}
+function loginWith3rd(id,email,data,return_url,callback){
+    
+    return dispatch=> {
+        dispatch(request({id}));
+        userService.loginWith3rd(id,email,data,return_url)
+            .then(
+                user => {
+                    dispatch(alertActions.clear());
+                    dispatch(success(user));
+                    callback(null,user);
+                    if(user.status){
+                        //history.push("/");
+                    }else{
+                        dispatch(alertActions.error(user.message));
+                    }
+                },
+                error=>{
+                    dispatch(failure(error));
+                    dispatch(alertActions.error(error));
+                    callback(error,null);
+                }
+            )
+        
+    }
+    function request(user){ return {type : userConstants.LOGIN_WITH_3RD_REQUEST, user } }
+    function success(user){
+            return user.user && user.user.token ? {type : userConstants.LOGIN_SUCCESS, user }
+            : {type : userConstants.LOGIN_WITH_3RD_SUCCESS, user }
+    }
+    function failure(error){ return {type : userConstants.LOGIN_WITH_3RD_FAILURE, error } }
     
 }
 function logout(){
@@ -240,6 +275,32 @@ function forgetPassword(phone){
     function request(phone) { return {type: userConstants.USER_FORGETPASSWORD_REQUEST,phone}}
     function success(phone) { return { type: userConstants.USER_FORGETPASSWORD_SUCCESS, phone }}
     function failure(error) { return { type: userConstants.USER_FORGETPASSWORD_FAILURE,error}}
+}
+function CheckOTPforgetpassword(phone, otp, callback){
+    return dispatch=>{
+        userService.checkOTPforgetpassword(phone, otp)
+            .then(
+                vaild => {
+                  callback(null,vaild)
+                },
+                error =>{
+                  callback(error,null)
+                } ,
+            )
+    }
+}
+function newPasswordForget(password, repassword, phone, otp, callback){
+    return dispatch=>{
+        userService.newPasswordForget(password, repassword, phone, otp)
+            .then(
+                vaild => {
+                  callback(null,vaild)
+                },
+                error =>{
+                  callback(error,null)
+                } ,
+            )
+    }
 }
 function uploadImageByUser(image){
     return dispatch=> {

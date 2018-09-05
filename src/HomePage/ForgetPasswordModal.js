@@ -5,7 +5,7 @@ const MESSAGE={
     Phone: {
         invalid : 'Vui lòng nhập số điện thoại hợp lệ',
         require : 'Vui lòng nhập số điện thoại của bạn',
-        exist   : 'Số điện thoại đã không được đăng ký'
+        exist   : 'Số điện thoại không tồn tại trên hệ thống'
         
     }
 }
@@ -40,14 +40,15 @@ class ForgetPasswordModal extends React.Component{
     }
     checkphone(err,e){
         //console.log(e);
-        if(!e.status){
+        if(e.status){
                     this.setState({
                         phoneIsExist: true,
-                        phoneIsValid: {status: false,message: MESSAGE.Phone.exist},
+                        phoneIsValid: {status: true,message: ''},
                     })
         }else{
             this.setState({
-                        phoneIsValid: {status: true,message: ''},
+                        phoneIsExist: false,
+                        phoneIsValid: {status: false,message: MESSAGE.Phone.exist},
                     })
         }
     }
@@ -61,17 +62,20 @@ class ForgetPasswordModal extends React.Component{
         if(phone.length == 0){
             _phone={status: false,message: MESSAGE.Phone.require};
             isValid=false;
-        }else if(phoneIsExist){
+        }else if(!phoneIsExist){
             _phone= {status: false,message: MESSAGE.Phone.exist}
             isValid=false;
         }
+
         if(!isValid){
             this.setState({
                 phoneIsValid: _phone,
             })
         }else{
             dispatch(userActions.forgetPassword(phone));
+            document.location.href = '/forgotpassword/'+phone;
         }
+        console.log(phoneIsExist, isValid);
         
     }
     render(){

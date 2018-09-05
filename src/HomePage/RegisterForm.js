@@ -3,6 +3,7 @@ import {connect} from "react-redux";
 import {Redirect } from "react-router-dom";
 import { _Combobox, _Input } from "../Form";
 import Select from "react-select";
+import {LeftPanelRegister} from "./index";
 import { userActions } from "../actions";
 const suggestion= require('../data/suggestion');
 const state=require('../data/state');
@@ -23,11 +24,12 @@ class RegisterForm extends React.Component{
             phone       :'',
             name        :'',
             address     :'',
-            
+            email       :'',
             dobIsValid:{status: true, message: ''},
             nameIsValid:{status: true, message: ''},
             stateIsValid: {status: true, message: ''},
             goalIsValid: {status: true, message: ''},
+            emailIsValid: {status: true, message: ''},
             phoneIsValid: {status: true, message: ''},
             passwdIsValid: {status: true, message: ''},
             genderIsValid: {status: true, message: ''},
@@ -167,16 +169,22 @@ class RegisterForm extends React.Component{
     }
     handleSubmit(e){
         e.preventDefault();
-        const { dispatch }=this.props;
+        const { dispatch,registrationWith3rd }=this.props;
         let isValid=true;
         //console.log(this.state);
         let valided={status: true, message: ''};
         let dob={status: true, message: ''},
             _name={status: true, message: ''},_address={status: true, message: ''},
             goal={status: true, message: ''},_password={status: true, message: ''},
-            _phone={status: true, message: ''},gender={status: true, message: ''};
-        const {genderValue,selectedDay,selectedMonth,selectedYear,selectedHHRGoal,password,phone,name,address } =this.state;
+            _phone={status: true, message: ''},gender={status: true, message: ''},
+            _email={status: true, message: ''};
         
+        const {genderValue,selectedDay,selectedMonth,selectedYear,selectedHHRGoal,password,phone,address } =this.state;
+        var {name, email} = this.state;
+        if(registrationWith3rd.user){
+            name = registrationWith3rd.user.fullname;
+            email = registrationWith3rd.user.email;
+        }
         if(genderValue.value=='-1'){
             gender={status: false, message: MESSAGE.Gender.required}
             isValid=false;
@@ -184,6 +192,16 @@ class RegisterForm extends React.Component{
         if(selectedHHRGoal.value=='-1'){
             goal={status: false, message: MESSAGE.Goal.required}
             isValid=false;
+        }
+        if(email.length ==0){
+            _email={status: false, message: MESSAGE.Email.required}
+            isValid=false;
+        }else{
+            var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            if(!re.test(email)){
+                _email={status: false, message: MESSAGE.Email.invalid}
+                isValid=false;
+            }
         }
         if(phone.length ==0){
             _phone={status: false, message: MESSAGE.Phone.required}
@@ -211,10 +229,6 @@ class RegisterForm extends React.Component{
             dob={status: false, message: MESSAGE.dob.required}
             isValid=false;
         }
-        if(selectedDay.value=='-1' || selectedMonth.value=='-1' || selectedYear.value=='-1' ){
-            dob={status: false, message: MESSAGE.dob.invalid}
-            isValid=false;
-        }
         if(!isValid){
             let valid={
                 dobIsValid:dob,
@@ -224,6 +238,7 @@ class RegisterForm extends React.Component{
                 phoneIsValid: _phone,
                 passwdIsValid:_password,
                 genderIsValid: gender,
+                emailIsValid:_email
             }
             this.setState({
                 ...valid
@@ -242,15 +257,22 @@ class RegisterForm extends React.Component{
                 dob_year    : selectedYear.value,
                 goal        : selectedHHRGoal,
                 gender      : gender,
-                address     : address
+                address     : address,
+                email       : email,
             };
+            if(registrationWith3rd.user){
+                user={
+                    ...user,
+                    with3rd: registrationWith3rd.user
+                }
+            }
             dispatch(userActions.register(user));
           //console.log("all valid") ;  
         }
     }
 
     render(){
-        const { registration, alert,authentication } =this.props;
+        const { registration, registrationWith3rd, alert,authentication } =this.props;
         var {registering}=registration;
         var {message}=alert;
         const genderOptions=[
@@ -262,33 +284,23 @@ class RegisterForm extends React.Component{
             month:registerData.dob_month,
             year: registerData.dob_year.reverse(),
         }
+        var _data = {
+            email: registrationWith3rd.user && registrationWith3rd.user.email ? registrationWith3rd.user.email : this.state.emailValue,
+            name: registrationWith3rd.user && registrationWith3rd.user.fullname ? registrationWith3rd.user.fullname : this.state.name,
+        }
+        var stateLoginWith3rd = registrationWith3rd.user && registrationWith3rd.user.email ? true :false;
+        //console.log('Home Town',suggestion.home_town);
         const address= {key: 'address' , value: '', label: 'ví dụ Hà Nội', data: suggestion.home_town, className:'inputLarge jsAutoCompleter jsInputLocation autoCompleter tw3-text'};
         if(authentication.loggedIn){
             return (<Redirect to="/" />)
         }
         return (
             <div className="homepageContainer__content__form registerContainer">
-      <div className="tw3-pane tw3-pane--left">
-         <div className="tw3-pane__content">
-            <div className="logo"><img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" /></div>
-            <h1 className="h1--step2">Sắp xong!</h1>
-            <h1 className="h1--step1 fw500">
-               Chat với bạn <strong>mới</strong> khắp thế giới.
-            </h1>
-            <p className="mb--slack">
-               Gặp hàng triệu người từ khắp nơi bất kể bạn ở đâu. Chat vui vẻ, kết bạn và tìm một nửa của mình. Bởi vì cuộc đời chính là những người bạn gặp gỡ.
-            </p>
-            <div className="mb--tight">
-               <div className="jsLoginOptions">
-               </div>
-            </div>
-            <small>(đây là cách đăng ký nhanh, chúng tôi sẽ không bao giờ đăng trên Facebook)</small>
-         </div>
-      </div>
+      <LeftPanelRegister />
       <div className="tw3-pane tw3-pane--right">
          <div className="tw3-pane__content jsRegisterFormContainer">
             <div className="divider hor full white mb--default">
-               <span>Hoặc đăng ký bằng số điện thoại</span>
+               <span>Đăng ký bằng số điện thoại</span>
             </div>
             <form action="/?login=0" method="post" onSubmit={this.handleSubmit}>
                <div className="tw3-form--stacked">
@@ -302,7 +314,7 @@ class RegisterForm extends React.Component{
                               </label>
                            </div>
                            <div className="tw3-form__row__input">
-                              <input type="text" name="name" onChange={this.onChange} placeholder="ví dụ Minh" className="tw3-text jsInputFirstName" onBlur={this.onInputNameBlur}/>
+                              <input type="text" name="name" value={_data.name} disabled={stateLoginWith3rd} onChange={this.onChange} placeholder="ví dụ Minh" className={`tw3-text jsInputFirstName ${stateLoginWith3rd ? ' disabled' : ''}`} onBlur={this.onInputNameBlur}/>
                            </div>
                         {!(this.state.nameIsValid.status)  &&     
                            <div className="tw3-form__row__error">
@@ -396,7 +408,7 @@ class RegisterForm extends React.Component{
                               </label>
                            </div>
                            <div className="tw3-form__row__input">
-                             <_Input field={address} onChange={this.onChange} onBlur={this.onInputAddressBlur} />
+                             <_Input field={address} onChange={this.onChange} onBlur={this.onInputAddressBlur}/>
                            </div>
                         { !this.state.stateIsValid.status &&
                             <div className="tw3-form__row__error">
@@ -437,6 +449,24 @@ class RegisterForm extends React.Component{
                         </div>
                      </div>
                   </div>
+                  <div className={(this.state.emailIsValid.status) ? "tw3-form__row jsFormRow" : "tw3-form__row jsFormRow tw3-form__row--error" }>
+                     <div className="tw3-form__row__label">
+                        <label>
+                        <span>Địa chỉ email</span>
+                        </label>
+                     </div>
+                     <div className="tw3-form__row__input">
+                        <input type="text" name="email" value={_data.email} className={`tw3-text jsInputEmail ${stateLoginWith3rd ? 'disabled' : ''}`} onBlur={this.onValidEmail} placeholder="ví dụ hhr@gmail.com" onChange={this.onChange} disabled={stateLoginWith3rd}/>
+                     </div>
+                        { !this.state.emailIsValid.status &&
+                         <div className="tw3-form__row__error">
+                            <span className="error--label jsErrorLabel">
+                            {this.state.emailIsValid.message}
+                            </span>
+                         </div>
+                        }
+                  </div>
+                  
                   <div className={(this.state.phoneIsValid.status) ? "tw3-form__row jsFormRow" : "tw3-form__row jsFormRow tw3-form__row--error" }>
                      <div className="tw3-form__row__label">
                         <label>
@@ -453,7 +483,6 @@ class RegisterForm extends React.Component{
                             </span>
                          </div>
                         }
-                     
                   </div>
                   <div className={(this.state.passwdIsValid.status) ? "tw3-form__row jsFormRow" : "tw3-form__row jsFormRow tw3-form__row--error" }>
                      <div className="tw3-form__row__label">
@@ -508,8 +537,8 @@ class RegisterForm extends React.Component{
     }
 }
 function mapStateToProps(state){
-    const { registration, alert, authentication } = state;
-    return { registration, alert, authentication };
+    const { registration,registrationWith3rd, alert, authentication } = state;
+    return { registration,registrationWith3rd, alert, authentication };
 }
 const connected = connect(mapStateToProps)(RegisterForm);
 export { connected as RegisterForm}

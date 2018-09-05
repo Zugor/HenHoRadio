@@ -29,7 +29,7 @@ class ProfilePage extends React.Component{
     render(){
         const { users,like,authentication } = this.props;
         if(!authentication.loggedIn){
-            return <Redirect to={"/login?return_url=/profile/"+this.props.match.params.uuid} />
+            return <Redirect to={"/#login?return_url=/profile/"+this.props.match.params.uuid} />
         }
         
         if(users.item && users.item.status && users.item.user.length == 0){   

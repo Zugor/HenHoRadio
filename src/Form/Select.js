@@ -1,6 +1,6 @@
-import React from "react";
+import React, {Fragment} from "react";
 import {connect} from "react-redux";
-import Select from 'react-select';
+import Select, { components } from 'react-select';
 import {userActions} from "../actions";
 class Combobox extends React.Component{
     constructor(props){
@@ -39,16 +39,27 @@ class Combobox extends React.Component{
         //console.log(options);
         //console.log(this.state);
         const selectValue= (this.props.field) ? this.props.field.value : '';
+        const Menu = (props) => {
+            return (
+              <Fragment>
+                <div className="tw3-dropdown--custom jsDropdownCustom open">
+                    <components.Menu {...props} className="tw3-dropdown--custom__content jsDropdownContent">
+                    {props.children}
+                    </components.Menu>
+                </div>
+              </Fragment>
+            );
+          };
         return(
             <Select
-					className="state-select"
 					ref={(ref) => { this.select = ref; }}
 					onBlurResetsInput={false}
 					onSelectResetsInput={false}
 					options={options}
 					name={this.state.field.key}
 					disabled={this.state.disabled}
-					value={(this.state.onselect) ? this.state.selectValue : selectValue}
+                    value={(this.state.onselect) ? this.state.selectValue : selectValue}
+                    components={{Menu}}
 					searchable={this.state.searchable}
                     placeholder={this.state.placeholder}
 				/>

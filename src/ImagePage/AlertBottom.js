@@ -18,7 +18,7 @@ class AlertBottom extends React.Component{
         const { alert } =this.props;
         const { list }=this.state;
         var ls=[];
-        if(alert.alerts.length > 0){
+        if(alert.alerts && alert.alerts.length > 0){
             alert.alerts.forEach(function(item,index,err){
                 switch(item.action){
                     case 'add_like':

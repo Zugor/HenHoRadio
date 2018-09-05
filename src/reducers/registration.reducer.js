@@ -24,3 +24,20 @@ export function registration(state={},action){
             return state;
     }
 }
+
+export function registrationWith3rd(state={},action){
+    switch(action.type){
+        case userConstants.LOGIN_WITH_3RD_REQUEST:
+            return {
+                loading: true
+            };
+        case userConstants.LOGIN_WITH_3RD_SUCCESS:
+            return {
+                user: action.user.user
+            };
+        case userConstants.LOGIN_WITH_3RD_FAILURE:
+            return {};
+        default:
+            return state;
+    }
+}

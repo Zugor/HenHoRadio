@@ -4,7 +4,6 @@ import {Provider} from "react-redux";
 import store from "./store/store";
 import { Modal,AlertTop,AlertBottom } from "./ImagePage";
 import App from "./App";
-require('PUBLIC/scss/_all.scss');
 
 render(
     <Provider store={store} > 

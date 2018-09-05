@@ -2,9 +2,7 @@ import React from "react";
 import {connect} from "react-redux";
 import { pageActions,modalActions,userActions } from "../actions";
 import {Redirect } from "react-router-dom";
-import { ForgetPasswordModal } from "./index";
-import FacebookLogin from 'react-facebook-login';
-import GoogleLogin from 'react-google-login';
+import { ForgetPasswordModal,LeftPanelLogin } from "./index";
 
 const MESSAGE=require('../data/formValid').loginDesktop
 class LoginForm extends React.Component{
@@ -23,7 +21,6 @@ class LoginForm extends React.Component{
         this.onInputUsernameBlur=this.onInputUsernameBlur.bind(this);
         this.onInputPasswordBlur=this.onInputPasswordBlur.bind(this);
         this.handleForgetPassword=this.handleForgetPassword.bind(this);
-        this.responseGoogleSuccess=this.responseGoogleSuccess.bind(this);
         
     }
     handleHomePageSwitch(view){
@@ -90,18 +87,6 @@ class LoginForm extends React.Component{
             }
         }
     }
-    responseFacebook(response) {
-        console.log(response)
-    }
-    responseGoogle(response) {
-        console.log(response)
-    }
-    responseGoogleSuccess(res) {
-        const { dispatch } = this.props;
-        
-        const { profileObj,accessToken }= res;
-        dispatch(userActions.login(profileObj.email,accessToken,''));
-    }
     
     compoentDidMount(){
         const { dispatch } = this.props;
@@ -110,72 +95,18 @@ class LoginForm extends React.Component{
     render(){
         //console.log(this.state);
         const { authentication , alert} = this.props;
-        const { loggedIn }  = authentication;
+        const { loggingIn }  = authentication;
         const { message }   = alert;
         if(authentication.loggedIn){
             return (<Redirect to="/" />)
         }
         return (
     <div className="homepageContainer__content__form homepageContainer__content__form--intro loginContainer jsLoginContainer">
-      <div className="tw3-pane tw3-pane--left">
-         <div className="tw3-pane__content">
-            <div className="homepageContainer__content__logo">
-               <div id="facebookLoadingRegister" className="homepageContainer__content__logo__loader">
-                  <div className="mb--default">
-                     <img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" />
-                  </div>
-                  <h4 className="newFontSize fcor">Vui lòng chờ chúng tôi tạo tài khoản cho bạn...</h4>
-                  <div className="tw3-box--loading"></div>
-               </div>
-               <div id="facebookLoadingLogin" className="homepageContainer__content__logo__loader">
-                  <div className="mb--default">
-                     <img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" />
-                  </div>
-                  <h4 className="newFontSize fcor">Đợi chút! Bạn đang đăng nhập...</h4>
-                  <div className="tw3-box--loading"></div>
-               </div>
-            </div>
-            <div className="mb--default">
-               <img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" />
-            </div>
-            <h1 className="h1--step1 fw500">
-               Chat với bạn <span className="text--bolder">mới</span> khắp thế giới.
-            </h1>
-            <p className="mb--slack">
-               Gặp hàng triệu người từ khắp nơi bất kể bạn ở đâu. Chat vui vẻ, kết bạn và tìm một nửa của mình. Bởi vì cuộc đời chính là những người bạn gặp gỡ.
-            </p>
-            <div className="mb--tight">
-               <div className="jsLoginOptions">
-                    <GoogleLogin
-                        clientId="413062312255-hsf4tds7ho89u15dmqlrhni40angs2hp.apps.googleusercontent.com"
-                        onSuccess={this.responseGoogleSuccess}
-                        onFailure={this.responseGoogle}
-                        className="kep-login-facebook kep-login-facebook-medium"
-                        style={{background: 'rgb(209, 72, 54)', border : 'none', marginBottom: '10px'}}
-                    >
-                    <i className="fa fa-google"></i>
-                    <span>Đăng nhập với Google</span>
-                    </GoogleLogin>
-                    <br/>
-                    <FacebookLogin
-                        appId="275785029894237"
-                        autoLoad={true}
-                        textButton="Đăng nhập với Facebook"
-                        language="vi_VN"
-                        size="medium"
-                        icon="fa-facebook"
-                        fields="name,email,picture"
-                        callback={this.responseFacebook}
-                    />
-               </div>
-            </div>
-            <small>(Đăng nhập cách này nhanh hơn, chúng tôi không bao giờ đăng lên Facebook của bạn)</small>
-         </div>
-      </div>
+      <LeftPanelLogin />
       <div className="tw3-pane tw3-pane--right">
          <div className="tw3-pane__content">
             <div className="divider hor full white mb--default">
-               <span>Hay đăng nhập với số điện thoại</span>
+               <span>Đăng nhập bằng số điện thoại</span>
             </div>
             <form action="/?login=0" method="post" onSubmit={this.handleSubmit}>
                <div className="tw3-form--stacked">
@@ -221,7 +152,11 @@ class LoginForm extends React.Component{
                      
                   </div>
                   <div className="tw3-form__row">
+                    {loggingIn &&
+                                            <img src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+                                        }    
                      <input type="submit" className="tw3-button tw3-button--green tw3-button--full tw3-button--xlarge tw3-button--rounded" value="ĐĂNG NHẬP" />
+                    
                   </div>
                   <div className="tw3-form__row">
                      <div className="form__extraOptions">

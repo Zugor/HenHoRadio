@@ -116,13 +116,13 @@ class _Input extends React.Component{
         const { field }  = this.state;
         //console.log(input);
         let v='';
-		const options = field.data.filter((i,j) =>{
-            let index=i.toLowerCase().indexOf(input) > -1;
+		const options = field.data.filter((obj,i) =>{
+            let index=obj.label.toLowerCase().indexOf(input) > -1;
             
             if(index){
                 
                 //console.log(input,i.toLowerCase().indexOf(input));
-                v=field.data[j].substr(i.toLowerCase().indexOf(input),input.length);
+                v=field.data[i].label.substr(obj.label.toLowerCase().indexOf(input),input.length);
                 //console.log(v);
                 //field.data[j]=field.data[j]
                 //console.log();
@@ -151,7 +151,7 @@ class _Input extends React.Component{
         //console.log(v);
         return(
             <div>
-            <input name={field.key} value={(this.state.changeValue ) ? this.state.value : v} placeholder={field.label} className={field.className} onChange={this.onChange}  onBlur={this.onBlur} />
+            <input name={field.key} value={(this.state.changeValue ) ? this.state.value : v} placeholder={field.label} className={field.className} onChange={this.onChange}  onBlur={this.onBlur} autoComplete="disabled"/>
             { search && searchData.length > 0 &&
                <div ref={this.setWrapperRef} className="autoCompleterSuggestions jsAutoCompleterSuggestionsContainer " style={{display: 'block',width: '153px'}} >
                 <ul className="jsAutoCompleterSuggestions">
@@ -161,16 +161,16 @@ class _Input extends React.Component{
                             
                             return   (
                             
-                                <li className={(index==i && selected) ? 'jsAutoCompleterSuggestion selected' : 'jsAutoCompleterSuggestion'} key={i} onMouseEnter={()=>{this.handleHover(i)}} key={i} onClick={()=>{this.handleSelect(e)}} >
-                                    { e.split(searchToken)[0] }
+                                <li className={(index==i && selected) ? 'jsAutoCompleterSuggestion selected' : 'jsAutoCompleterSuggestion'} key={i} onMouseEnter={()=>{this.handleHover(i)}} onClick={()=>{this.handleSelect(e.label)}} >
+                                    { e.label.split(searchToken)[0] }
                                     <b>{searchToken}</b>
-                                    {e.split(searchToken)[1]}
+                                    {e.label.split(searchToken)[1]}
                                 </li>
                             )
                         }else{
                             return   (
-                                <li className="jsAutoCompleterSuggestion" key={i} onClick={()=>{this.handleSelect(e)}} >
-                                    {e}
+                                <li className="jsAutoCompleterSuggestion" key={i} onClick={()=>{this.handleSelect(e.label)}} >
+                                    {e.label}
                                 </li>
                             )
                         }

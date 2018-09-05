@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, NavLink, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { userActions } from "../actions";
 import { Loading } from "../sections";
@@ -11,6 +11,7 @@ class Header extends React.Component{
           menuActive: false
       }  
     this.handleHeaderPointerMenuActivityToggle=this.handleHeaderPointerMenuActivityToggle.bind(this);
+    this.handleLogout=this.handleLogout.bind(this);
     }
     componentDidMount(){
         const { authentication, dispatch } = this.props;
@@ -33,10 +34,15 @@ class Header extends React.Component{
     handleHeaderMobileToggle(){
         document.getElementsByTagName('body')[0].classList.toggle('tw3-header--mobile--menu--visisble');
     }
+    handleLogout(e){
+        e.preventDefault();
+        this.props.dispatch(userActions.logout());
+        return <Redirect to="/" />
+    }
     render(){
         //console.log(this.state.menuActive);
         const hostname= window.location.protocol + '//' + window.location.hostname;
-        const { users,view }  =this.props;
+        const { users,view,authentication }  =this.props;
         var _users=(users.item && users.item.status && users.item.user.length > 0) ? users.item.user[0] : {};
         let previewThumbnail='';
         if(_users.preview_thumbnail){
@@ -61,25 +67,27 @@ class Header extends React.Component{
         }
         //console.log(this.props);
        // {`${hostname}:3001/image/t/${_data.preview_thumbnail}`}
-       return (
+        var userid="";
+        if(authentication.loggedIn)
+        return (
  <div className="tw3-headerV2 tw3-headerV2--navigation--visible jsHeader">  
     <Loading/>
     <div className="tw3-headerV2--mobile jsHeaderMobile">
         <div className="tw3-tabsHolder">
-            <Link to="/game" className="tw3-tab ">
-               <i className="tw3-iconThumbsUp tw3-iconBig tw3-iconBadge"></i>
-            </Link>
-            <Link to="/search" className="tw3-tab  selected">
-               <i className="tw3-iconSearchSolid tw3-iconBig tw3-iconBadge"></i>
-            </Link>
-            <Link to="/radio" className="tw3-tab ">
-               <i className="tw3-iconChat tw3-iconBig tw3-iconBadge">
+            <NavLink exact to="/search" activeClassName="selected" className="tw3-tab jsActivitycenterPopover">
+                <i className="tw3-iconSearchSolid tw3-iconBig tw3-iconBadge"></i>
+            </NavLink>
+            <NavLink exact to="/radio" activeClassName="selected" className="tw3-tab jsActivitycenterPopover">
+                <i className="tw3-iconChat tw3-iconBig tw3-iconBadge">
                     <span className="badge--darkRed jsCount"  style={{display: 'none'}}></span>
                </i>
-            </Link>
-            <Link to="/activitycenter" className="tw3-tab jsActivitycenterPopover ">
-               <i className="tw3-iconAlert tw3-iconGrey  tw3-iconBig tw3-iconBadge"></i>
-            </Link>
+            </NavLink>
+            <NavLink exact to="/likes" activeClassName="selected" className="tw3-tab jsActivitycenterPopover">
+                <i className="tw3-iconHeartLine tw3-iconBig tw3-iconBadge"></i>
+            </NavLink>
+            <NavLink exact to="/activity/likes" activeClassName="selected" className="tw3-tab jsActivitycenterPopover">
+                <i className="tw3-iconEye-v2 tw3-iconBig tw3-iconBadge"></i>
+            </NavLink>
             <a href="javascript:;" className="tw3-tab tw3-headerV2MenuToggle jsMobileHeaderPointerMenuToggle" onClick={this.handleHeaderMobileToggle}>
                <i className="tw3-iconDotsOutline tw3-iconBig tw3-iconBadge pt--tight">
                     <span className="badge--darkRed jsCount bounce"   style={{display:'none'}}></span>
@@ -93,47 +101,33 @@ class Header extends React.Component{
                <img id="logo" alt="HHR" width="82" height="23" src="/img/logo.png" />
             </a>
             <ul className="tw3-headerV2__navigation clearfix left">
-                <li className={(view=='game') ? 'menuItem tw3-headerV2__navigation__item selected' : ' menuItem tw3-headerV2__navigation__item'}>
-                    <Link to="/game" >
+                <li className='menuItem tw3-headerV2__navigation__item'>
+                    <NavLink exact to="/search" >
                         <i className="tw3-iconThumbsUp"></i>
-                        <span className="tw3-headerV2__navigation__item__label">Khám phá
+                        <span className="tw3-headerV2__navigation__item__label">Tìm bạn
                         </span>
-                    </Link>
+                    </NavLink>
                 </li>
-                <li className={(view=='search') ? 'menuItem tw3-headerV2__navigation__item selected' : ' menuItem tw3-headerV2__navigation__item'}>
-                    <Link to="/search" >
-                        <i className="tw3-iconSearchSolid"></i>
-                        <span className="tw3-headerV2__navigation__item__label">Tìm kiếm</span>
-                    </Link>
-                </li>
-                <li className={(view=='radio') ? 'menuItem tw3-headerV2__navigation__item selected' : ' menuItem tw3-headerV2__navigation__item'}>
-                    <Link to="/radio">
+                <li className='menuItem tw3-headerV2__navigation__item'>
+                    <NavLink exact to="/radio">
                         <i className="tw3-iconChat"></i>
                         <span className="badge--darkRed jsCount"  style= {{verticalAlign: '4px',display: 'none'}}></span>
-                    <span className="tw3-headerV2__navigation__item__label">Nghe lại HHR</span>
-                    </Link>
+                        <span className="tw3-headerV2__navigation__item__label">Nghe lại HHR</span>
+                    </NavLink>
                 </li>
-                <li className={(view=='likes') ? 'menuItem tw3-headerV2__navigation__item selected' : ' menuItem tw3-headerV2__navigation__item'}>
-                    <Link to="/likes" >
+                <li className='menuItem tw3-headerV2__navigation__item'>
+                    <NavLink exact to="/likes" >
                         <i className="tw3-iconHeartLine"></i>
                     <span className="badge--darkRed jsCount" style={{display: 'none'}}></span>
-                    <span className="tw3-headerV2__navigation__item__label">Người thích bạn</span>
-                    </Link>
+                    <span className="tw3-headerV2__navigation__item__label">Bạn quan tâm</span>
+                    </NavLink>
                 </li>
-                <li className={(view=='views') ? 'menuItem tw3-headerV2__navigation__item selected' : ' menuItem tw3-headerV2__navigation__item'}>
-                    <Link to="/views">
-                        <i className="tw3-iconEye-v2">
-                        </i>
-                        <span className="badge--darkRed tw3-headerV2__navigation__item__counter jsCount" style={{display:'none'}}></span>
-                        <span className="tw3-headerV2__navigation__item__label">Khách thăm</span>
-                    </Link>
-                 </li>
-                 <li className={(view=='friends') ? 'menuItem tw3-headerV2__navigation__item selected' : ' menuItem tw3-headerV2__navigation__item'} >
-                    <Link to="/activity/friends" >
-                        <i className="tw3-iconFriendsV2"></i>
-                        <span className="badge--darkRed jsCount" style={{verticalAlign: '4px'}}>•</span>
-                        <span className="tw3-headerV2__navigation__item__label">Bạn bè</span>
-                    </Link>
+                 <li className='menuItem tw3-headerV2__navigation__item' >
+                    <NavLink exact to="/activity/likes" >
+                        <i className="tw3-iconEye-v2"></i>
+                        <span className="badge--darkRed jsCount" style={{display:'none',verticalAlign: '4px'}}>•</span>
+                        <span className="tw3-headerV2__navigation__item__label">Quan tâm bạn</span>
+                    </NavLink>
                  </li>
             </ul>
             <ul className="tw3-headerV2__actions clearfix right">
@@ -187,7 +181,7 @@ class Header extends React.Component{
                     </div>
                 </li>
                 <li className="menuItem tw3-headerV2__actions__item">
-                    <a href="#12" className={ this.state.menuActive ? 'noline tw3-pointerMenuToggle jsHeaderPointerMenuActivityToggle active' : 'noline tw3-pointerMenuToggle jsHeaderPointerMenuActivityToggle'  } onClick={this.handleHeaderPointerMenuActivityToggle}>
+                    <a href="javascript://" className={ this.state.menuActive ? 'noline tw3-pointerMenuToggle jsHeaderPointerMenuActivityToggle active' : 'noline tw3-pointerMenuToggle jsHeaderPointerMenuActivityToggle'  } onClick={this.handleHeaderPointerMenuActivityToggle}>
                            <i className="tw3-iconDotsOutline tw3-iconGrey tw3-iconBig tw3-iconBadge">
                                 <span className="badge--darkRed jsCount bounce" style={{display:'none'}}></span>
                            </i>
@@ -308,7 +302,7 @@ class Header extends React.Component{
                        </a>
                     </li>
                     <li id="logoutButtonContainer" className="last tw3-pointerMenu__item--grey">
-                        <a href="/login/?action=logout&amp;lng=vi&amp;twoo_csrf_token=ed7160e618c5d8ad22c4dc1573026fde_1525928807" id="logoutLinkResponsive" className="noline clearfix ">
+                        <a href="/logout" onClick={this.handleLogout} id="logoutLinkResponsive" className="noline clearfix ">
                             <div className="tw3-col-9">
                                 <div className="tw3-row">
                                     <div className="tw3-col-2 tw3-pointerMenu__icon">
@@ -328,7 +322,35 @@ class Header extends React.Component{
         </div>
     </div>
 </div>
-  ) 
+  )
+  else
+  return(
+    <div className="tw3-header tw3-header--guest">
+        <div className="tw3-header--mobile mlr--compact clearfix">
+            <a href="/" className="logo ">
+                <img id="logo" alt="Twoo" width="82" height="23" src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png"/>
+            </a>
+            <ul className="tw3-header__actions clearfix right">
+                <li className="menuItem tw3-header__actions__item">
+                    <a href="/#login" className="tw3-button tw3-button--blue tw3-button--small tw3-button--rounded">Đăng ký ngay</a> hoặc <a href="/#login">Đăng nhập</a>
+                </li>
+            </ul>
+        </div>
+        <div className="tw3-header--desktop">
+            <div className="tw3-container">
+                <a href="/" className="logo ">
+                    <img id="logo" alt="Twoo" width="82" height="23" src="https://twoo-a.akamaihd.net/static/7156520574362430695506/images/logos/logo-twoo-flat@2x.png"/>
+                </a>
+                
+                <ul className="tw3-header__actions clearfix right">
+                    <li className="menuItem tw3-header__actions__item">
+                        <a href="/#login" className="tw3-button tw3-button--blue tw3-button--small tw3-button--rounded">Đăng ký ngay</a> hoặc <a href="/#login">Đăng nhập</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+  )
     }
 }
 function mapStateToProps(state){

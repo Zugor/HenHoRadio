@@ -2,7 +2,9 @@ import React from "react";
 //import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { LoginPopup } from "../sections";
-import { LoginForm } from "./LoginForm"
+import { LoginForm } from "./LoginForm";
+require('PUBLIC/css/homepage.css');
+
 class LoginPage extends React.Component{
     
     constructor(props){

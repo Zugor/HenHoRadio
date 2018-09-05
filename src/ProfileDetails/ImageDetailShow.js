@@ -105,12 +105,6 @@ class ImageDetailShow extends React.Component{
         }
         const is_thumb_active=!(_image.image_id==_users.preview_thumbnail);
         return(
-            
-<div className="tw3-modal__content clearfix  jsDialogContent ">
-    <div className="tw3-modal__close">
-        <a href="javascript://" className="jsClose"><i className="ficonFilled"><i className="tw3-iconClose tw3-iconWhite"></i></i>
-        </a>
-    </div>
     <div className="tw3-photobox--v4">
         <div className="tw3-photobox--v4__overlay jsPhotoboxOverlay"></div>
         <div className="tw3-photobox--v4__content jsPhotoboxContent" >
@@ -282,7 +276,6 @@ class ImageDetailShow extends React.Component{
             </div>
         </div>
     </div>
-</div>
         )
         
     }

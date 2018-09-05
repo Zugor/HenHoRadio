@@ -164,27 +164,31 @@ Yêu cầu xem hình</span>
                                 </strong>
                             </h3>
                             <p className="text--small text--bold">{ _data.address  }</p>
-                            <div className="profileStats mb--compact">
-                                <ul>
-                                    <li>
-                                        <a href="/activitycenter#likes" className="text--subtle">
-                                        Thích
-                                            <span className="value">{_data.like_total}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/activitycenter#views" className="text--subtle">
-                                        Lượt xem
-                                            <span className="value" >{_data.view_total}</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="/activity/matches" className="text--subtle">
-                                        Điểm phù hợp
-                                        <span className="value ">{_data.match}</span>
-                                        </a>
-                                    </li>
-                                </ul>
+                            <div class="profileStats mb--compact">
+                                <table width="100%">
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <a href="/activitycenter?page=likes#likes" class="text--subtle">
+                            Thích
+                            <span className="value">{_data.like_total}</span>
+                            </a>
+                                            </td>
+                                            <td>
+                                                <a href="/activitycenter?page=views#views" class="text--subtle">
+                            Lượt xem
+                            <span className="value">{_data.view_total}</span>
+                            </a>
+                                            </td>
+                                            <td>
+                                                <a href="/activity/matches" class="text--subtle">
+                            Người phù hợp
+                            <span className="value">{_data.match}</span>
+                            </a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link,Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { HeaderVisible, Header, HeaderMobile } from "./index";
 class PageNotFound extends React.Component{
@@ -7,37 +7,33 @@ class PageNotFound extends React.Component{
         //this.props.dispatch(userAction.All());
     }
     render(){
+        const { authentication }=this.props;
         
+        if(!authentication.loggedIn){
+           return  <Redirect to={ `/#login` } />
+        }
         return (
             <div>
             <HeaderVisible />
             <HeaderMobile />
             <Header view={this.props.view}/>
-            <section className="error_area">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-3"></div>
-                        <div className="col-md-6">
-                            <div className="error_text">
-                                <h6>Error</h6>
-                                <h3>404</h3>
-                                <h5>Page Not Found</h5>
-                                <Link to="/" className="register_angkar_btn" >Go to Home Page</Link>
-                                
-                            </div>
-                            <div className="search_widget">
-                                <div className="input-group">
-                                    <input type="text" className="form-control" placeholder="Search Here" />
-                                    <span className="input-group-btn">
-                                        <button className="btn btn-default" type="button"><i className="fa fa-search" aria-hidden="true"></i></button>
-                                    </span>
-                                </div>
+            <div className="tw3-wrapper">
+                <div className="tw3-content">
+                    <div className="notfound__heroImage"></div>
+                        <div className="tw3-container">
+                            <div className="text--center">
+                                <h2 className="tw3-h2 text--blue">404</h2>
+                                <h4 className="tw3-h4 text--bold">Không tìm thấy trang này.</h4>
+                                <p className="text--subtle">
+                                Có thể đường dẫn bạn dùng bị hỏng, sơ yếu đã bị xóa, hoặc có thể trang của chúng tôi đang bị lỗi.
+                                </p>
+                            <div className="text--center">
+                                <Link to="/" className="tw3-button tw3-button--blue tw3-button--rounded">Trở lại mục Khám phá</Link>
                             </div>
                         </div>
-                        <div className="col-md-3"></div>
                     </div>
                 </div>
-            </section>
+            </div>
             </div>
         )
     }

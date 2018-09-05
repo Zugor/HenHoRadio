@@ -16,7 +16,7 @@ class _Combobox extends React.Component{
     render(){
         //console.log(this.props);
         const options = this.props.options
-        return (<Select options={options} onChange={this.onChange} />)
+        return (<Select className="state-select" options={options} onChange={this.onChange} />)
     }
 }
 function mapStateToProps(state){

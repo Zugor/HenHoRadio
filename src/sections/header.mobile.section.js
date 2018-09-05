@@ -6,9 +6,23 @@ class HeaderMobile extends React.Component{
     render(){
         const { users } = this.props;
         var _users=(users.item && users.item.status && users.item.user.length > 0) ? users.item.user[0] : {};
+        let previewThumbnail='';
+        if(_users.preview_thumbnail){
+            previewThumbnail=hostname+"/image/t/"+_users.preview_thumbnail;
+        }else{
+            if(_users.gender == 1){
+                previewThumbnail="/img/avatar-male-sm.jpg";
+            }
+            if(_users.gender==2){
+                previewThumbnail="/img/avatar-female-sm.jpg";
+            }
+        }
+        if(previewThumbnail==''){
+            previewThumbnail="/img/avatar-male-sm.jpg";
+        }
         var _data={
             fullname            : _users.fullname,
-            preview_thumbnail   : _users.preview_thumbnail
+            preview_thumbnail   : previewThumbnail
         }
         return (
 <div className="tw3-header--mobile--menu jsHeaderMobileMenu">
@@ -17,7 +31,7 @@ class HeaderMobile extends React.Component{
             <div className="tw3-row">
                 <Link to="/profile">
                     <div className="tw3-menu__avatar">
-                        <img src={`/image/${_data.preview_thumbnail}`} className="tw3-avatar tw3-avatar--circle tw3-avatar--fluid" width="32" height="32"/>
+                        <img src={_data.preview_thumbnail} className="tw3-avatar tw3-avatar--circle tw3-avatar--fluid" width="32" height="32"/>
                     </div>
                     <div className="tw3-menu__title">
                         Sơ yếu
@@ -110,12 +124,12 @@ class HeaderMobile extends React.Component{
         </li>
         <li className="tw3-menu__row--grey">
             <div className="tw3-row">
-                <Link to="/login/?action=logout&amp;lng=vi&amp;twoo_csrf_token=ed7160e618c5d8ad22c4dc1573026fde_1525928807">
+                <a href="/logout" onClick={this.handleLogout}>
                     <div className="tw3-menu__avatar"><i className="tw3-iconLogout tw3-iconBig"></i></div>
                     <div className="tw3-menu__title">
                         Đăng xuất
                     </div>
-                </Link>
+                </a>
             </div>
         </li>
     </ul>

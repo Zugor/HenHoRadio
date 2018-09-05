@@ -50,6 +50,7 @@ class SearchFilterModal extends React.Component{
             start: [18, 30],
             connect: true,
             step: 1,
+            margin: 2, 
             range: {
                 'min': 18,
                 'max': 90
@@ -170,6 +171,7 @@ class SearchFilterModal extends React.Component{
                                 name={'advancedFilter['+topic.value+']'}
                                 options={SINGLE[topic.value]}
                                 placeholder={topic.label}
+                                //menuIsOpen={true}
                             />
                         </div>
                     </div>

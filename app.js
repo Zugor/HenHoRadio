@@ -6,7 +6,7 @@ const fs              = require('fs');
 const express         = require('express');
 const async           = require("async");
 const bcrypt          = require("bcryptjs");
-const http            = require('http');
+const https           = require('https');
 const path            = require('path');
 const jsonParser	  = require('body-parser').json();
 const multer          = require('multer');
@@ -15,6 +15,12 @@ const models          = require("./settings_db");
 const Uuid            = require("cassandra-driver").types.Uuid;
 const upload          = multer();
 //const sharp           = require('sharp');
+
+var privateKey  = fs.readFileSync('ssl_cert/hhr.key', 'utf8');
+var certificate = fs.readFileSync('ssl_cert/hhr.crt', 'utf8');
+
+var credentials = {key: privateKey, cert: certificate};
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname,'views'));
 app.use(express.static('public'));
@@ -98,6 +104,52 @@ app.post("/user/authenticate", jsonParser,function(req,res,next){
     })
 
 });
+app.post("/user/OAuth", jsonParser,function(req,res,next){
+    var params=req.body;
+    var PARAM_IS_VALID={};
+    var user={};
+    var isLogin=false;
+    var msg="";
+    async.series([
+        function(callback){
+            PARAM_IS_VALID["id"]=params.id;
+            PARAM_IS_VALID["email"]=params.email;
+            PARAM_IS_VALID["accessToken"]=params.data && params.data.accessToken ? params.data.accessToken : null;
+            PARAM_IS_VALID["fullname"]=params.data && params.data.fullname ? params.data.fullname : null;
+            PARAM_IS_VALID["picture"]=params.data && params.data.picture ? params.data.picture : null;
+            PARAM_IS_VALID["by"]=params.data && params.data.by ? params.data.by : null;
+
+            PARAM_IS_VALID["return_url"]=(params.return_url !=undefined && params.return_url!="") ?params.return_url : "/" ;
+            user["username"]=params.email;
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.user_by_3rd.find({ id: PARAM_IS_VALID.id, email: PARAM_IS_VALID.email },function(err,_user){
+
+                if(_user != undefined && _user.length > 0 ) {
+                    isLogin=res;
+                    user["user_id"]=_user[0].user_id;
+                }else{
+                    msg=MESSAGE.USER_NOT_FOUND;
+                }
+                callback(err,null);
+            });
+        },
+        function(callback){
+            if(isLogin){
+                user["token"]="abc";
+            }
+            callback(null,null);
+        }
+    ],function(err,result){
+        if(err) res.json({status: false, message: MESSAGE.SYSTEM_BUSY, users: [] });
+        else (msg !="") ?
+            res.json({ status: true, message: msg, user : PARAM_IS_VALID  })
+        :
+            res.json({ status: true, user : user, return_url: PARAM_IS_VALID["return_url"]  })
+    })
+
+});
 
 app.get("/test",function(req,res,next){
     res.render('upload');
@@ -115,18 +167,27 @@ app.post("/user/registration", jsonParser,function(req,res,next){
             PARAM_IS_VALID["fullname"]  = params.fullname;
             //PARAM_IS_VALID["state"]     = params.selectRegion;
             //PARAM_IS_VALID["stateVal"]  = Number(params.selectRegion.value);
-            PARAM_IS_VALID["phones"]    = {"main": PARAM_IS_VALID["phone"]};
             PARAM_IS_VALID["dob_day"]   = Number(params.dob_day);
             PARAM_IS_VALID["dob_month"] = Number(params.dob_month);
             PARAM_IS_VALID["dob_year"]  = Number(params.dob_year);
             PARAM_IS_VALID["gender"]    = Number(params.gender);
+            PARAM_IS_VALID["email"]     = params.email;
             PARAM_IS_VALID["enabled"]   = true;
-            PARAM_IS_VALID['address']   = params.address,
-            PARAM_IS_VALID['hhr_goal']  = params.goal,
-            PARAM_IS_VALID['user_id']   = user_id,
+            PARAM_IS_VALID['address']   = params.address;
+            PARAM_IS_VALID['hhr_goal']  = params.goal;
+            PARAM_IS_VALID['user_id']   = user_id;
             user={
                 user_id: PARAM_IS_VALID['user_id'],
 
+            }
+            callback(null,null);
+        },
+        function(callback){
+            if(params.with3rd) {
+                PARAM_IS_VALID["preview_thumbnail"]     = params.with3rd.picture?params.with3rd.picture:null;
+                PARAM_IS_VALID["accessToken"]           = params.with3rd.accessToken?params.with3rd.accessToken:null;
+                PARAM_IS_VALID["3rd_by"]                = params.with3rd.by?params.with3rd.by:null;
+                PARAM_IS_VALID["3rd_id"]                = params.with3rd.id?params.with3rd.id:null;
             }
             callback(null,null);
         },
@@ -143,7 +204,17 @@ app.post("/user/registration", jsonParser,function(req,res,next){
             });
         },
         function(callback){
-
+            var user_by_3rd_object={};
+            if(params.with3rd) {
+                user_by_3rd_object={
+                    id                          : PARAM_IS_VALID["3rd_id"],
+                    email                       : PARAM_IS_VALID.email,
+                    user_id                     : PARAM_IS_VALID.user_id,
+                    name                        : PARAM_IS_VALID.fullname,
+                    picture                     : PARAM_IS_VALID.preview_thumbnail,
+                    by                          : PARAM_IS_VALID["3rd_by"],
+                }
+            }
             var user_login_object={
                 phone                   : PARAM_IS_VALID.phone,
                 enabled                 : PARAM_IS_VALID.enabled,
@@ -160,7 +231,7 @@ app.post("/user/registration", jsonParser,function(req,res,next){
                 fullname    : PARAM_IS_VALID.fullname,
                 gender      : PARAM_IS_VALID.gender,
                 address     : PARAM_IS_VALID.address,
-                phones      : PARAM_IS_VALID.phone,
+                phone       : PARAM_IS_VALID.phone,
                 dob_day     : PARAM_IS_VALID.dob_day,
                 dob_month   : PARAM_IS_VALID.dob_month,
                 dob_year    : PARAM_IS_VALID.dob_year,
@@ -179,12 +250,22 @@ app.post("/user/registration", jsonParser,function(req,res,next){
             var user_by_gender_state_year_object={
                 gender          : PARAM_IS_VALID.gender,
                 //state           : PARAM_IS_VALID.address,
+                preview_thumbnail: PARAM_IS_VALID.preview_thumbnail ?PARAM_IS_VALID.preview_thumbnail:null,
                 dob_year        : PARAM_IS_VALID.dob_year,
                 fullname        : PARAM_IS_VALID.fullname,
                 created_date    : new Date().getTime(),
                 user_id         : user_id,
             }
 
+            if(params.with3rd) {
+                const user_by_3rd=()=>{
+                    let object      =user_by_3rd_object;
+                    let instance    =new models.instance.user_by_3rd(object);
+                    let save        =instance.save({if_exist: true, return_query: true});
+                    return save;
+                }
+                queries.push(user_by_3rd());
+            }
             const user_by_phone_enable=()=>{
                 let object      =user_login_object;
                 let instance    =new models.instance.user_by_phone_enable(object);
@@ -210,9 +291,27 @@ app.post("/user/registration", jsonParser,function(req,res,next){
             queries.push(users());
             const user_by_details=()=>{
                 let object      ={
-                    user_id : PARAM_IS_VALID.user_id,
+                    user_id : user_id,
                     hhr_goal: PARAM_IS_VALID.hhr_goal,
                 };
+                if(params.with3rd) {
+                    if(PARAM_IS_VALID['3rd_by'] === 'facebook')
+                        object = {
+                            ...object,
+                            facebook: {
+                                private: PARAM_IS_VALID['3rd_id'],
+                                name: PARAM_IS_VALID.fullname,
+                            }
+                        }
+                    else
+                        object = {
+                            ...object,
+                            emails: {
+                                googleId: PARAM_IS_VALID['3rd_id'],
+                                private: PARAM_IS_VALID.email,
+                            }
+                        }
+                }
                 let instance    =new models.instance.user_by_details(object);
                 let save        =instance.save({return_query: true});
                 return save;
@@ -351,7 +450,7 @@ app.post("/user/member/active", jsonParser,function(req,res,next){
             models.instance.user_by_active.eachRow({},{autoPage : true},function(n,users){
                 results.push(users);
             },function(err,result){
-                console.log(err);
+                //console.log(err);
                 callback(err,null);
             });
 
@@ -1458,7 +1557,7 @@ app.post("/user/match/like", jsonParser,function(req,res,next){
 
                 callback(null,null);
             }catch(e){
-                console.log(e);
+                //console.log(e);
                 callback(e,null);
             }
         },
@@ -1739,6 +1838,137 @@ app.post("/payment/checkSendOTP", jsonParser,function(req,res,next){
         else res.json({ status: true , results });
     })
 });
+app.post("/forgotpassword/:phone", jsonParser,function(req,res,next){
+    const rand=(max,min)=>{ return (Math.floor(Math.random() * (max - min + 1)) + min) };
+    let {params}=req;
+    var otpcode = rand(987678,154321);
+    var otp_object={}
+    var PARAMS_IS_VALID={};
+    var results={};
+    var queries=[];
+    async.series([
+        function(callback){
+            PARAMS_IS_VALID['phone'] = params.phone;
+            PARAMS_IS_VALID['token'] = params.token;
+            otp_object={phone: PARAMS_IS_VALID.phone, otp: otpcode};
+            callback(null,null);
+        },
+        function(callback){
+            models.instance.user_by_phone.find({phone: params.phone},function(err,result){
+                if(result && result.length > 0)
+                    callback(err,null);
+                else
+                    callback(1,null);
+                
+            })
+        },
+        function(callback){
+            const otp=()=>{
+                let object      =otp_object;
+                let instance    =new models.instance.otp(object);
+                let save        =instance.save({return_query: true});
+                return save;
+            }
+            queries.push(otp());
+            models.doBatch(queries,function(err){
+                callback(err,null);
+            });
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, results});
+        else res.json({ status: true });
+    })
+});
+app.post("/forgot/newpassword", jsonParser,function(req,res,next){
+    let params=req.body;
+    let saltRounds=10;
+    var _salt="",_hash="";
+    var PARAMS_IS_VALID={};
+    async.series([
+        function(callback){
+            try{
+                PARAMS_IS_VALID['phone'] = params.phone,
+                PARAMS_IS_VALID['otp'] = Number(params.otp),
+                PARAMS_IS_VALID['password'] = params.password,
+                PARAMS_IS_VALID['repassword'] = params.password,
+
+                callback(null,null);
+            }catch(e){
+                callback(e,null);
+            }
+
+        },
+        function(callback){
+            models.instance.otp.find({ phone: PARAMS_IS_VALID.phone, otp: PARAMS_IS_VALID.otp },{select :["phone","status"]},function(err,otp){
+                otp && otp.length > 0 ? callback(null,null) : callback(MESSAGE.PAYMENT_OTP_WRONG,null);
+            })
+        },
+        function(callback){
+            bcrypt.genSalt(saltRounds,  function(err,salt){
+                _salt=salt
+                callback(err,null);
+            });
+        },
+        function(callback){
+            bcrypt.hash(params.password, _salt,   function(err,hash){
+                _hash=hash;
+                callback(err,null);
+            });
+        },
+        function(callback){
+            var query_object = { phone: PARAMS_IS_VALID.phone, enabled: true };
+            var update_values_object = {password : _hash};
+            var options = {ttl: 86400, if_exists: false};
+
+            models.instance.user_by_phone_enable.update(query_object, update_values_object, options,function(err){
+                callback(err,null);
+            })
+        },
+    ],function(err,result){
+        if (err) res.json({status: false, error: err});
+        else res.json({ status: true });
+    })
+});
+app.post("/forgot/checkOTP", jsonParser,function(req,res,next){
+    let params=req.body;
+    var PARAMS_IS_VALID={};
+    async.series([
+        function(callback){
+            try{
+                PARAMS_IS_VALID['phone'] = params.phone,
+                PARAMS_IS_VALID['otp'] = Number(params.otp),
+
+                callback(null,null);
+            }catch(e){
+                callback(e,null);
+            }
+
+        },
+        function(callback){
+            models.instance.otp.find({ phone: PARAMS_IS_VALID.phone, otp: PARAMS_IS_VALID.otp },{select :["phone","status"]},function(err,otp){
+                otp && otp.length > 0 ? callback(null,null) : callback(MESSAGE.PAYMENT_OTP_WRONG,null);
+            })
+        },
+        function(callback){
+            var query_object = { phone: PARAMS_IS_VALID.phone, otp: PARAMS_IS_VALID.otp };
+            var update_values_object = {status : true};
+            var options = {ttl: 86400, if_exists: false};
+
+            models.instance.otp.update(query_object, update_values_object, options,function(err){
+                callback(err,null);
+            })
+        },
+        function(callback){
+            callback(null,null);
+        }
+    ],function(err,result){
+        if (err) res.json({status: false, error: err});
+        else res.json({ status: true });
+    })
+});
 app.get("/payment/sendOTP/:token/:phone", jsonParser,function(req,res,next){
     const rand=(max,min)=>{ return (Math.floor(Math.random() * (max - min + 1)) + min) };
     let {params}=req;
@@ -1763,7 +1993,6 @@ app.get("/payment/sendOTP/:token/:phone", jsonParser,function(req,res,next){
             }
             queries.push(otp());
             models.doBatch(queries,function(err){
-                results=otp_object;
                 callback(err,null);
             });
         },
@@ -1772,7 +2001,7 @@ app.get("/payment/sendOTP/:token/:phone", jsonParser,function(req,res,next){
         }
     ],function(err,result){
         if (err) res.json({status: false, message: err});
-        else res.json({ status: true , results });
+        else res.json({ status: true });
     })
 });
 app.post("/payment/checkOTP", jsonParser,function(req,res,next){
@@ -1911,18 +2140,32 @@ app.post("/login/OAuth/google", jsonParser,function(req,res,next){
 });
 
 app.get('/', function(req, res){
-	res.render('index');
+    if(req.secure){
+        res.render('index'); 
+    };
+    res.redirect('https://' + req.hostname + req.url);
 });
 
 app.use(function(err,req,res,next){
-	if (!module.parent) console.error(err.stack);
-	res.status(500).render('index');
+    if (!module.parent) console.error(err.stack);
+    if(req.secure){
+        res.status(500).render('index');
+    };
+    res.redirect('https://' + req.hostname + req.url);
 });
 
 app.use(function(req, res, next){
-    res.status(404).render('index');
+    if(req.secure){
+        res.status(404).render('index');
+    };
+    res.redirect('https://' + req.hostname + req.url);
 });
 
+var server = https.createServer(credentials, app);
+
 if(!module.parent){
-  app.listen(80, () => console.log('Example app listening on port 3000!'));
+  server.listen(443, function(){
+    console.log("server running at https://henhoradio.net/")
+  });    
+  app.listen(80, () => console.log('Started server on port 80!'));
 }

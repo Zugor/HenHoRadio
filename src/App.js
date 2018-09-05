@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { alertActions } from "./actions";
 //import { PrivateRoute } from "../components";
-import { HomePageGuest,HomePageLogin, HomePage } from "./HomePage";
+import { HomePageGuest,HomePageLogin, HomePage,ForgotPassword } from "./HomePage";
 import { LoginPage } from "./LoginPage";
 import { RegisterPage } from "./RegisterPage";
 import { ProfilePage } from "./ProfilePage";
@@ -70,6 +70,8 @@ class App extends Component{
                             <Route  path="/profile/:uuid" component={ ProfilePage }  >
                             </Route>
                             <Route exact path="/profile" component={ ProfileDetailPage }  >
+                            </Route>
+                            <Route path="/forgotpassword/:phone" component={ ForgotPassword }  >
                             </Route>
                             <Route exact path="/settings" component={ SettingPage }  >
                             </Route>

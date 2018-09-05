@@ -10,7 +10,7 @@ class SearchFilter extends React.Component{
     }
     handleOpenModal(){
         const { dispatch } = this.props;
-        dispatch(modalActions.openModal({ className: 'tw3-modal--qAndA  tw3-modal--medium  tw3-modal--padding--slack ',content:<SearchFilterModal/>}));
+        dispatch(modalActions.openModal({ className: 'tw3-modal--small  tw3-modal--padding--loose ',content:<SearchFilterModal/>}));
     }
     componentDidMount(){
         

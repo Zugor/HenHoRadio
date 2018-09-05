@@ -98,6 +98,19 @@ export function users(state = {} ,action){
             return {
               error:action.error 
             };
+
+        case userConstants.OTP_FORGETPASSWORD_REQUEST:
+            return {
+                checking:true,
+            };
+        case userConstants.OTP_FORGETPASSWORD_SUCCESS:
+            return {
+                status:action.status
+            };
+         case userConstants.OTP_FORGETPASSWORD_FAILURE:
+            return {
+              error:action.error 
+            };
        default: 
            return state;
         

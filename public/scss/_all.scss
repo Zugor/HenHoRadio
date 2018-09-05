@@ -1,5 +1,16 @@
 @charset "utf-8";
 
+.advanced-select{
+  .advanced-select__menu{
+    overflow: hidden;
+  }
+  .advanced-select__option{
+    padding: 7px 10px;
+    cursor: pointer;
+    padding-left: 30px;
+    position: relative;
+  }
+}
 .intl-tel-input {
     position:relative;
     display:block;
@@ -351,7 +362,9 @@
   .state-select {
     z-index: 3;
   }
+  .tw3-dropdown--custom{
 
+  }
 @import "./group-more.p1.scss";
 @import "./group-more.p2.scss";
 @import "./group-more.p3.scss";

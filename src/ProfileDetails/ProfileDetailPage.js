@@ -34,7 +34,7 @@ class ProfileDetailPage extends React.Component{
         const { authentication }=this.props;
         
         if(!authentication.loggedIn){
-           return  <Redirect to={ `/login?return_url=/profile` } />
+           return  <Redirect to={ `/#login?return_url=/profile` } />
         }
         
         
