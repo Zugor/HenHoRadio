@@ -3,7 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { LoginForm, RegisterForm,HomePageMobile, HomePageFooterLink } from "./index";
 import { pageActions } from "../actions";
-require('PUBLIC/css/homepage.css');
 
 class HomePage extends React.Component{
     constructor(props){

@@ -3,7 +3,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { LoginPopup } from "../sections";
 import { LoginForm } from "./LoginForm";
-require('PUBLIC/css/homepage.css');
 
 class LoginPage extends React.Component{
     

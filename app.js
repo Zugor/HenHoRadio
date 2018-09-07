@@ -2142,23 +2142,23 @@ app.post("/login/OAuth/google", jsonParser,function(req,res,next){
 app.get('/', function(req, res){
     if(req.secure){
         res.render('index'); 
-    };
-    res.redirect('https://' + req.hostname + req.url);
+    }
+    else return res.redirect('https://' + req.hostname + req.url);
 });
 
 app.use(function(err,req,res,next){
     if (!module.parent) console.error(err.stack);
     if(req.secure){
         res.status(500).render('index');
-    };
-    res.redirect('https://' + req.hostname + req.url);
+    }
+    else return res.redirect('https://' + req.hostname + req.url);
 });
 
 app.use(function(req, res, next){
     if(req.secure){
         res.status(404).render('index');
-    };
-    res.redirect('https://' + req.hostname + req.url);
+    }
+    else return res.redirect('https://' + req.hostname + req.url);
 });
 
 var server = https.createServer(credentials, app);
