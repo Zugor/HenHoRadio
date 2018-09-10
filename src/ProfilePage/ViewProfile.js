@@ -102,7 +102,7 @@ class ViewProfile extends React.Component{
                 match_desc          : ''
             } : {};
         
-        console.log("Data",_data.previewThumbnail);
+        console.log("Data",_data);
         return(
             
             <div className="tw3-col-12 tw3-bp3-col-5">
@@ -160,28 +160,28 @@ Yêu cầu xem hình</span>
                         </div>
                         <div className="tw3-mediav2__body">
                             <h3 className="tw3-h3 mb--none">
-                                <strong>{_data.fullname}, <span className="el--inlineBlock">{_data.age}</span>
+                                <strong>{_data.fullname}, <span className="el--inlineBlock">{String(_data.age)}</span>
                                 </strong>
                             </h3>
                             <p className="text--small text--bold">{ _data.address  }</p>
-                            <div class="profileStats mb--compact">
+                            <div className="profileStats mb--compact">
                                 <table width="100%">
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <a href="/activitycenter?page=likes#likes" class="text--subtle">
+                                                <a href="/activitycenter?page=likes#likes" className="text--subtle">
                             Thích
                             <span className="value">{_data.like_total}</span>
                             </a>
                                             </td>
                                             <td>
-                                                <a href="/activitycenter?page=views#views" class="text--subtle">
+                                                <a href="/activitycenter?page=views#views" className="text--subtle">
                             Lượt xem
                             <span className="value">{_data.view_total}</span>
                             </a>
                                             </td>
                                             <td>
-                                                <a href="/activity/matches" class="text--subtle">
+                                                <a href="/activity/matches" className="text--subtle">
                             Người phù hợp
                             <span className="value">{_data.match}</span>
                             </a>

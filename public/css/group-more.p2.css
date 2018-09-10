@@ -1310,7 +1310,7 @@ body.tr .tw3-button--link {
   background: #fabc3f;
   border-color: #fabc3f;
   color: #fff;
-  background: url("/static/59557618646404341547/images/v3/buttons/icon-credits-button.png") no-repeat 4px center #fabc3f;
+  background: url("/img/buttons/icon-credits-button.png") no-repeat 4px center #fabc3f;
   background-size: 32px 32px;
   padding-left: 45px;
   -webkit-border-radius: 20px;
@@ -1370,14 +1370,14 @@ body.tr .tw3-button--link {
       .tw3-button--credits.tw3-button--rounded.tw3-button--subtle:hover {
         border-color: rgba(250, 188, 63, 0.5); }
   .tw3-button--credits:hover {
-    background: url("/static/59557618646404341547/images/v3/buttons/icon-credits-button.png") no-repeat 4px center #f9b326;
+    background: url("/img/buttons/icon-credits-button.png") no-repeat 4px center #f9b326;
     background-size: 32px 32px; }
   .tw3-button--credits.tw3-button--small {
-    background: url("/static/59557618646404341547/images/v3/buttons/icon-credits-button.png") no-repeat 4px center #fabc3f;
+    background: url("/img/buttons/icon-credits-button.png") no-repeat 4px center #fabc3f;
     background-size: 22px 22px;
     padding-left: 35px; }
     .tw3-button--credits.tw3-button--small:hover {
-      background: url("/static/59557618646404341547/images/v3/buttons/icon-credits-button.png") no-repeat 4px center #f9b326;
+      background: url("/img/buttons/icon-credits-button.png") no-repeat 4px center #f9b326;
       background-size: 22px 22px; }
   .tw3-button--credits.tw3-button--large {
     -webkit-border-radius: 25px;

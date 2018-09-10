@@ -36,26 +36,8 @@ module.exports = {
 				},
 				test: /\.js?$/,
 				exclude: /node_modules/
-			},
-			{
-				test: /\.scss$/,
-				use: ExtractTextPlugin.extract({
-				  fallback: 'style-loader',
-				  use: [
-					'css-loader',
-					'sass-loader'
-				  ]
-				})
-			},
-			{
-				test: /\.css$/,
-				use: [
-					'css-loader',
-				  ]
 			}
 		]
 	},
-	plugins: [
-		new ExtractTextPlugin('public/css/style.hhr.v4.css'),
-	]
+	plugins: []
 };

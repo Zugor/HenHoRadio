@@ -60,28 +60,28 @@ class ViewInfo extends React.Component{
         {_data.address}
     </p>
 
-    <div class="profileStats mb--compact">
+    <div className="profileStats mb--compact">
     <table width="100%">
         <tbody>
             <tr>
                 <td>
-                    <a href="/activitycenter?page=likes#likes" class="text--subtle">
+                    <a href="/activitycenter?page=likes#likes" className="text--subtle">
 Thích
-<span class="value" data-count="4">
+<span className="value" data-count="4">
 4</span>
 </a>
                 </td>
                 <td>
-                    <a href="/activitycenter?page=views#views" class="text--subtle">
+                    <a href="/activitycenter?page=views#views" className="text--subtle">
 Lượt xem
-<span class="value" data-count="1">
+<span className="value" data-count="1">
 1</span>
 </a>
                 </td>
                 <td>
-                    <a href="/activity/matches" class="text--subtle">
+                    <a href="/activity/matches" className="text--subtle">
 Người phù hợp
-<span class="value" data-count="0">
+<span className="value" data-count="0">
 0</span>
 </a>
                 </td>

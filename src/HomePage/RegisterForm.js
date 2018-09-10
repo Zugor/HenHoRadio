@@ -290,7 +290,7 @@ class RegisterForm extends React.Component{
         }
         var stateLoginWith3rd = registrationWith3rd.user && registrationWith3rd.user.email ? true :false;
         //console.log('Home Town',suggestion.home_town);
-        const address= {key: 'address' , value: '', label: 'ví dụ Hà Nội', data: suggestion.home_town, className:'inputLarge jsAutoCompleter jsInputLocation autoCompleter tw3-text'};
+        const address= {key: 'address' , value: '', label: 'ví dụ Hà Nội', data: state, className:'inputLarge jsAutoCompleter jsInputLocation autoCompleter tw3-text'};
         if(authentication.loggedIn){
             return (<Redirect to="/" />)
         }

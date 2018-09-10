@@ -28,7 +28,7 @@ class PageNotFound extends React.Component{
                                 Có thể đường dẫn bạn dùng bị hỏng, sơ yếu đã bị xóa, hoặc có thể trang của chúng tôi đang bị lỗi.
                                 </p>
                             <div className="text--center">
-                                <Link to="/" className="tw3-button tw3-button--blue tw3-button--rounded">Trở lại mục Khám phá</Link>
+                                <Link to="/" className="tw3-button tw3-button--blue tw3-button--rounded">Trở lại mục Tìm bạn</Link>
                             </div>
                         </div>
                     </div>

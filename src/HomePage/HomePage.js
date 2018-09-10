@@ -11,40 +11,69 @@ class HomePage extends React.Component{
             login: true,
             register: false,
             className: 'jsHomepage homepageLogin',
-            loading: false,
+            loading: true,
         }
         this.handleHomePageSwitch=this.handleHomePageSwitch.bind(this);
     }
     handleHomePageSwitch(view){
         const { dispatch } = this.props;
         dispatch(pageActions.switchView(view));
-        
     }
     componentDidMount(){
         //this.props.dispatch(userAction.All());
-        //console.log();
-        
         document.body.className='ltr vi default unconfirmed macintosh';
-        //console.log(document.head);
-        var sc = document.createElement("link");
         document.getElementsByTagName('html')[0].setAttribute('class', 'css3 flexbox notouch');
-        
+        this.loadStyleSheets('loading','/css/homepage.css');
+    }
+    componentWillMount(){
+        this._stylesheetPromises = [];
     }
     componentWillUnmount(){
-        let head=document.head;
-        let myNode = document.getElementsByTagName("link");
-        //console.log(myNode[0].firstChild);
-        for(var i=0 ; i< myNode.length ; i++){
-            if(myNode[i].href.indexOf('homepage') > -1 ){
-                myNode[i].parentNode.removeChild(myNode[i]);
-            //    console.log(myNode[i]);
+        this._stylesheetPromises.forEach(function(p){
+            // we use the promises because unmount before the download finishes is possible
+            p.then(function(link){
+              // guard against it being otherwise removed
+              if (link.parentNode) link.parentNode.removeChild(link);
+            });
+        });
+    }
+    loadStyleSheets(name, url){
+        this._stylesheetPromises.push(this.loadStyleSheet(url));
+    }
+    loadStyleSheet(url){
+        var sheet = document.createElement('link');
+        sheet.rel = 'stylesheet';
+        sheet.href = url;
+        sheet.type = 'text/css';
+        document.head.appendChild(sheet);
+        var _timer;
+  
+        // TODO: handle failure
+        return new Promise(function(resolve){
+          sheet.onload = resolve;
+          sheet.addEventListener('load', resolve);
+          sheet.onreadystatechange = function(){
+            if (sheet.readyState === 'loaded' || sheet.readyState === 'complete') {
+              resolve();
             }
-        }
-        //console.log(this._stylesheetPromises);
-        
+          };
+  
+          _timer = setInterval(function(){
+            try {
+              for (var i=0; i<document.styleSheets.length; i++) {
+                if (document.styleSheets[i].href === sheet.href) resolve();
+              } 
+              }catch(e) { /* the stylesheet wasn't loaded */ }
+            }, 250);
+        })
+        .then(function(){
+            this.setState({loading: false});
+            clearInterval(_timer); 
+            return sheet; 
+        }.bind(this));
     }
     render(){
-        const {register,login,className} = this.state;
+        const {register,login,className,loading} = this.state;
         const { page }      =this.props;
             //console.log(this.state);
         
@@ -69,12 +98,13 @@ class HomePage extends React.Component{
                 break;
         }
         }
+        if (!loading)
         return (
             <div className={_className} id="wrapper">
                 <div className="tw3-homepage--abstract tw3-homepage--abstract--desktop">
                     <div className="homepageLinks homepageLinks--top">
                       <div className="homepageLinks--top__left">
-                         <a href="https://www.facebook.com/ilikeTwoo" className="el--inlineBlock vam"><i className="tw3-iconCircleFacebook tw3-iconWhite tw3-iconLarge"></i></a>
+                         <a href="https://www.facebook.com/henhoradio/" target="_blank" className="el--inlineBlock vam"><i className="tw3-iconCircleFacebook tw3-iconWhite tw3-iconLarge"></i></a>
                       </div>
                       <div className="homepageLinks--top__right">
                          <a href="javascript:;" className={(_login) ? "tw3-button tw3-button--orange tw3-button--rounded jsHomepageSwitch loginButton" :"tw3-button tw3-button--orange tw3-button--rounded jsHomepageSwitch loginButton slected"} onClick={()=>{this.handleHomePageSwitch('login')}}  >Đăng nhập</a>
@@ -90,6 +120,7 @@ class HomePage extends React.Component{
                 <HomePageFooterLink />             
             </div>
         )
+        else return(<div></div>)
         
     }
 }

@@ -7030,7 +7030,7 @@ html.cufon-active .tw3-profile__infoTop__userActions--mobile {
       color: #6d7c85; }
 
 .profilev3 .tw3-panel[data-panel="photos"] .tw3-thumb--private .tw3-thumb__link__image {
-  background-image: url("/static/040869706448890976249151/images/bkg/bkg-hatch@2x.png");
+  background-image: url("/img/bkg/bkg-hatch@2x.png");
   background-repeat: repeat;
   background-size: 20px 20px;
   color: #fff;
@@ -7199,7 +7199,7 @@ html.notouch .tw3-profile__photosHolder .tw3-profile__photo > .tw3-profile__phot
 
 .tw3-profile__photosHolder .tw3-profile__photo--private > .tw3-profile__photo__img {
   background-color: black;
-  background-image: url("/static/040869706448890976249151/images/bkg/bkg-hatch@2x.png");
+  background-image: url("/img/bkg/bkg-hatch@2x.png");
   background-repeat: repeat;
   background-size: 20px 20px;
   cursor: pointer;
@@ -8645,7 +8645,7 @@ body.interstitial--premiumVip .profilev4seo body, body.interstitial--premiumVip 
     left: 0; }
 
 .tw3-profile__mediabox__private {
-  background-image: url("/static/040869706448890976249151/images/bkg/bkg-hatch@2x.png");
+  background-image: url("/img/bkg/bkg-hatch@2x.png");
   background-repeat: repeat;
   background-size: 20px 20px;
   color: #fff;

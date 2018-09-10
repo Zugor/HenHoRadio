@@ -152,7 +152,7 @@ Twoo Gói Cao Cấp</span><br/>
                             <i className="tw3-iconCheckThin tw3-iconGreen"></i>
                             :
                             <GoogleLogin
-                                clientId="413062312255-hsf4tds7ho89u15dmqlrhni40angs2hp.apps.googleusercontent.com"
+                                clientId="413062312255-8jcb1v7um4kh97aq0ip4m3oah811tbf8.apps.googleusercontent.com"
                                 buttonText="Xác nhận"
                                 tag="a"
                                 className="tw3-button tw3-button--full tw3-button--blue tw3-button--rounded tw3-button--small tw3-button--subtle tw3-button--wrap jsClose"

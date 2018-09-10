@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { userActions } from "../actions";
 const MESSAGE={
     Phone: {
-        invalid : 'Vui lòng nhập số điện thoại hợp lệ',
-        require : 'Vui lòng nhập số điện thoại của bạn',
-        exist   : 'Số điện thoại không tồn tại trên hệ thống'
+        invalid : 'Vui lòng nhập số điện thoại hợp lệ.',
+        require : 'Vui lòng nhập số điện thoại của bạn.',
+        exist   : 'Số bạn nhập chưa đăng ký HHR. Vui lòng dùng SĐT đã đăng ký HHR để lấy Mật khẩu.'
         
     }
 }
@@ -85,7 +85,10 @@ class ForgetPasswordModal extends React.Component{
         <div className="tw3-modal__content__header">
         <h4>Quên mật khẩu?</h4>
         <p className="text--subtle text--smaller">
-            Nhập địa chỉ email của bạn vào dưới đây và chúng tôi sẽ gửi cho bạn một đường dẫn để bạn thay đổi mật khẩu của bạn. Lưu ý nhập địa chỉ email được dùng để đăng nhập tài khoản của bạn.
+        Để lấy mật khẩu mới, mời bạn dùng số điện thoại đã đăng ký tài khoản HHR, soạn tin nhắn theo cú pháp:
+        </p>
+        <p>
+        <center><strong>HHR MK</strong> gửi <strong>8179</strong> <i>(1000đ/sms)</i></center>
         </p>
         <form action="/login?view=forgot" method="post" className="jsForgotForm" onSubmit={this.handleSubmit}>
             <div className="tw3-form--stacked">

@@ -1,3 +1,26 @@
+.tw3-homepage--abstract .tw3-pane--left{
+    background-image: linear-gradient(-75deg, #ff3f3f 0%, #ff94b6 100%)!important;
+}
+.tw3-button--orange {
+    background: #ff3f3f!important;
+    border-color: #ff3f3f!important;
+}
+.tw3-tab--v2.selected {
+    color: #ff3f3f;
+}
+.tw3-tab--v2.selected:after {
+    background: #ff3f3f;
+}
+.tw3-iconOrange {
+    color: #ff3f3f;
+}
+.tw3-headerV2__navigation__item a.active {
+    color: #ff3f3f;
+}
+.tw3-headerV2--desktop .tw3-headerV2__navigation__item a:hover {
+    color: #ff3f3f;
+}
+
 .advanced-select .advanced-select__menu {
     overflow: hidden;
 }
@@ -371,7 +394,4 @@ header div {
 
 .state-select {
     z-index: 3;
-}
-.tw3-headerV2__navigation__item a.active {
-    color: #ff7102;
 }

@@ -497,7 +497,7 @@
   width: 100%;
   height: 137px;
   background-size: 1019px 137px;
-  background-image: url("/static/83525559296931795/images/v3/404/bkg-illustration-hetero.png"); }
+  background-image: url("/img/404/bkg-illustration-hetero.png"); }
 
 @media (min-width: 680px) {
   .notfound__heroImage {
@@ -505,7 +505,7 @@
     height: 274px;
     max-width: 1667px;
     background-size: 1667px 274px;
-    background-image: url("/static/066977931380244989267/images/v3/404/bkg-illustration-hetero-big.png"); }
+    background-image: url("/img/404/bkg-illustration-hetero-big.png"); }
     .notfound__heroImage:before {
       content: '';
       position: absolute;

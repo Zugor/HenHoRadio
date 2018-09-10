@@ -98,7 +98,7 @@ class Header extends React.Component{
     <div className="tw3-headerV2--desktop jsHeaderDesktop">
         <div className="tw3-container">
             <a href="/" className="logo ">
-               <img id="logo" alt="HHR" width="82" height="23" src="/img/logo.png" />
+               <img id="logo" alt="HHR" width="119" height="23" src="/img/logo_only_text.png" />
             </a>
             <ul className="tw3-headerV2__navigation clearfix left">
                 <li className='menuItem tw3-headerV2__navigation__item'>

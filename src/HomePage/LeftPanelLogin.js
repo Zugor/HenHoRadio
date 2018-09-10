@@ -33,24 +33,8 @@ class LeftPanelLogin extends React.Component{
         return(
          <div className="tw3-pane tw3-pane--left">
          <div className="tw3-pane__content">
-            <div className="homepageContainer__content__logo">
-               <div id="facebookLoadingRegister" className="homepageContainer__content__logo__loader">
-                  <div className="mb--default">
-                     <img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" />
-                  </div>
-                  <h4 className="newFontSize fcor">Vui lòng chờ chúng tôi tạo tài khoản cho bạn...</h4>
-                  <div className="tw3-box--loading"></div>
-               </div>
-               <div id="facebookLoadingLogin" className="homepageContainer__content__logo__loader">
-                  <div className="mb--default">
-                     <img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" />
-                  </div>
-                  <h4 className="newFontSize fcor">Đợi chút! Bạn đang đăng nhập...</h4>
-                  <div className="tw3-box--loading"></div>
-               </div>
-            </div>
             <div className="mb--default">
-               <img src="https://twoo-a.akamaihd.net/static/682503600911326952191/images/logos/logo-twoo-flat-white@2x.png" height="42" />
+               <img src="/img/logo_only_text.png" height="42" />
             </div>
             <h1 className="h1--step1 fw500">
               <b> Kết bạn mới nghiêm túc, tin cậy, bảo mật.</b>
@@ -84,7 +68,7 @@ class LeftPanelLogin extends React.Component{
                     />
                </div>
             </div>
-            <small>(Đăng nhập cách này nhanh hơn, chúng tôi không bao giờ đăng lên Facebook của bạn)</small>
+            <small>(Chúng tôi tôn trọng và bảo mật theo cách bạn chọn!)</small>
          </div>
       </div>
         
